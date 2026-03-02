@@ -1,35 +1,36 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-montserrat",
-});
-
+// Aquí le decimos a WhatsApp y Facebook exactamente qué leer
 export const metadata: Metadata = {
-  title: "Rosario Hermosillo | 50 Años",
-  description: "Invitación exclusiva al 50 aniversario de María del Rosario Solís Hermosillo.",
+  title: "Cumpleaños 50 | María del Rosario",
+  description: "Acompáñame a celebrar mi medio siglo de vida. Sábado 18 de Abril.",
+  openGraph: {
+    title: "Cumpleaños 50 | María del Rosario",
+    description: "Acompáñame a celebrar mi medio siglo de vida.",
+    url: "https://mifestejo.mom",
+    siteName: "Invitación Rosario",
+    images: [
+      {
+        url: "/preview.jpg", // Esta es la foto que arrastraste a la carpeta public
+        width: 1200,
+        height: 630,
+        alt: "Invitación 50 Años Rosario",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="es" className={`${cormorant.variable} ${montserrat.variable}`}>
-      <body className="bg-neutral-950 text-neutral-200 antialiased font-sans selection:bg-amber-700/30">
-        {children}
-      </body>
+    <html lang="es">
+      <body>{children}</body>
     </html>
   );
 }

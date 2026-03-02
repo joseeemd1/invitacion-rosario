@@ -44,7 +44,7 @@ export default function Unboxing({
               Tenemos el honor de invitarte
             </p>
             <p className="font-serif text-2xl md:text-3xl italic text-[#2A1A10]">
-              a celebrar el 50 aniversario de
+              a celebrar el cumpleaños numero 50 de 
             </p>
           </motion.div>
 

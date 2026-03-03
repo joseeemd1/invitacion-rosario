@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../components/Unboxing";
-import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock } from "lucide-react";
+import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Share2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 const Particles = () => {
@@ -46,7 +46,6 @@ const InvitationContent = () => {
   const [cargando, setCargando] = useState(false);
   const [confirmadoExitoso, setConfirmadoExitoso] = useState(false);
   
-  // Estado para saber qué respondió
   const [respuestaFinal, setRespuestaFinal] = useState<{asiste: boolean, pases: number} | null>(null);
 
   const galleryRef = useRef(null);
@@ -59,48 +58,59 @@ const InvitationContent = () => {
   const yHeroBg = useTransform(heroScroll, [0, 1], ["0%", "30%"]);
   const opacityHeroText = useTransform(heroScroll, [0, 0.8], [1, 0]);
 
-  // FUNCIÓN: Buscar coincidencias en Supabase
-  const buscarInvitado = async () => {
-    if (busqueda.length < 2) return;
-    setCargando(true);
-    setErrorBusqueda("");
-    setResultadosBusqueda([]);
-    setInvitadoEncontrado(null);
-    
-    try {
-      const { data, error } = await supabase
-        .from("invitados_lista")
-        .select("*")
-        .ilike("nombre", `%${busqueda}%`) // Busca coincidencias parciales
-        .order("nombre", { ascending: true }); // Ordena alfabéticamente
-
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        setErrorBusqueda("No encontramos invitaciones con ese nombre. Intenta buscar solo por un apellido.");
-      } else {
-        setResultadosBusqueda(data); // Guardamos toda la lista de opciones
+  // BÚSQUEDA EN VIVO (Se ejecuta automáticamente al escribir)
+  useEffect(() => {
+    const buscarEnVivo = async () => {
+      if (busqueda.length < 2) {
+        setResultadosBusqueda([]);
+        setErrorBusqueda("");
+        return;
       }
-    } catch (err) {
-      console.error(err);
-      setErrorBusqueda("Hubo un error de conexión. Intenta de nuevo.");
-    } finally {
-      setCargando(false);
-    }
-  };
 
-  // FUNCIÓN: Seleccionar a la persona de la lista
+      setCargando(true);
+      setErrorBusqueda("");
+      
+      try {
+        const { data, error } = await supabase
+          .from("invitados_lista")
+          .select("*")
+          .ilike("nombre", `%${busqueda}%`)
+          .order("nombre", { ascending: true });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          setErrorBusqueda("No encontramos coincidencias. Intenta con un solo apellido.");
+          setResultadosBusqueda([]);
+        } else {
+          setResultadosBusqueda(data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    // Esperar 400ms después de que el usuario deje de teclear para no saturar la base de datos
+    const delayDebounceFn = setTimeout(() => {
+      buscarEnVivo();
+    }, 400);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [busqueda]);
+
   const seleccionarDeLista = (invitado: any) => {
     if (invitado.confirmado) {
-      setErrorBusqueda("Esta invitación ya fue confirmada o declinada anteriormente.");
+      setErrorBusqueda("Esta invitación ya fue confirmada anteriormente.");
     } else {
       setInvitadoEncontrado(invitado);
-      setResultadosBusqueda([]); // Ocultamos la lista
+      setResultadosBusqueda([]);
       setErrorBusqueda("");
+      setBusqueda(""); // Limpiamos el buscador visualmente
     }
   };
 
-  // FUNCIÓN: Enviar la decisión (Sí o No)
   const handleConfirmacion = async (asiste: boolean) => {
     setCargando(true);
     try {
@@ -132,6 +142,25 @@ const InvitationContent = () => {
     setResultadosBusqueda([]);
     setInvitadoEncontrado(null);
     setErrorBusqueda("");
+  };
+
+  // Función para compartir en redes usando tecnología nativa del celular
+  const compartirPase = async () => {
+    const shareData = {
+      title: '¡Confirmo mi asistencia!',
+      text: '¡Listos para celebrar los 50 años de Rosario! 🎉 Nos vemos el 18 de Abril.',
+      url: 'https://mifestejo.mom',
+    };
+    
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        alert("Tómale una captura de pantalla a este pase para subirlo a tu historia de Instagram. 📸");
+      }
+    } catch (err) {
+      console.log("Error compartiendo:", err);
+    }
   };
 
   return (
@@ -236,30 +265,80 @@ const InvitationContent = () => {
              
              <AnimatePresence mode="wait">
                
-               {/* ESTADO 1: ÉXITO AL CONFIRMAR */}
+               {/* ESTADO 1: ÉXITO AL CONFIRMAR (Pase VIP y Redes) */}
                {confirmadoExitoso ? (
                  <motion.div 
                    key="exito"
                    initial={{ opacity: 0, scale: 0.9 }}
                    animate={{ opacity: 1, scale: 1 }}
-                   className="bg-white p-12 border border-[#C5A059]/30 shadow-2xl rounded-sm flex flex-col items-center"
+                   className="bg-white border border-[#C5A059]/30 shadow-2xl rounded-sm flex flex-col items-center overflow-hidden"
                  >
                    {respuestaFinal?.asiste ? (
                      <>
-                        <div className="h-16 w-16 bg-[#F4F0EA] rounded-full flex items-center justify-center mb-6">
-                          <Check className="h-8 w-8 text-[#C5A059]" />
+                        {/* PASE VIP VISUAL (Ideal para Screenshot) */}
+                        <div className="bg-[#2A1A10] w-full p-10 text-[#F4F0EA] relative overflow-hidden border-b-4 border-[#C5A059]">
+                          <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/noise.png')] mix-blend-overlay"></div>
+                          <p className="text-[10px] tracking-[0.3em] uppercase mb-2 text-[#C5A059]">Confirmación Oficial</p>
+                          <h3 className="font-serif text-4xl italic mb-6">¡Gracias!</h3>
+                          
+                          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-sm mb-4">
+                            <p className="text-sm font-sans uppercase tracking-widest opacity-70 mb-1">Pase A Nombre De:</p>
+                            <p className="font-serif text-2xl text-white">{invitadoEncontrado?.nombre}</p>
+                          </div>
+                          
+                          <div className="flex justify-center items-center gap-4">
+                            <div className="text-center">
+                              <p className="text-[10px] uppercase tracking-widest opacity-70 mb-1">Lugares</p>
+                              <p className="font-serif text-3xl text-[#C5A059]">{respuestaFinal.pases}</p>
+                            </div>
+                            <div className="w-px h-10 bg-white/20"></div>
+                            <div className="text-center">
+                              <p className="text-[10px] uppercase tracking-widest opacity-70 mb-1">Fecha</p>
+                              <p className="font-serif text-xl mt-1">18 ABR</p>
+                            </div>
+                          </div>
                         </div>
-                        <h3 className="font-serif text-3xl text-[#2A1A10] mb-2 italic">¡Allá nos vemos!</h3>
-                        <p className="font-sans text-[#2A1A10]/70">Los {respuestaFinal.pases} lugares para {invitadoEncontrado?.nombre} están confirmados.</p>
+
+                        {/* BOTONES SOCIALES */}
+                        <div className="p-8 w-full flex flex-col gap-4 bg-white">
+                          <p className="text-sm text-[#2A1A10]/70 mb-2 font-sans">
+                            Toma captura de pantalla a tu pase y compártelo, o avísale a la festejada.
+                          </p>
+                          
+                          <button onClick={compartirPase} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[10px] hover:opacity-90 transition-opacity shadow-md">
+                            <Instagram className="w-4 h-4" />
+                            Subir a mi Historia
+                          </button>
+
+                          <a 
+                            href={`https://wa.me/526622795755?text=¡Hola Rosario! Ya confirmamos nuestra asistencia a tu fiesta para los ${respuestaFinal.pases} lugares de: ${invitadoEncontrado?.nombre}. ¡Allá nos vemos! 🎉`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[10px] hover:bg-[#128C7E] transition-colors shadow-md"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            Avisar por WhatsApp
+                          </a>
+                        </div>
                      </>
                    ) : (
-                     <>
-                        <div className="h-16 w-16 bg-[#F4F0EA] rounded-full flex items-center justify-center mb-6">
+                     <div className="p-12 text-center w-full">
+                        <div className="h-16 w-16 bg-[#F4F0EA] rounded-full flex items-center justify-center mb-6 mx-auto">
                           <Check className="h-8 w-8 text-[#C5A059]" />
                         </div>
                         <h3 className="font-serif text-3xl text-[#2A1A10] mb-2 italic">Gracias por avisar</h3>
-                        <p className="font-sans text-[#2A1A10]/70">Lamentamos que no nos puedan acompañar, los tendremos en el corazón.</p>
-                     </>
+                        <p className="font-sans text-[#2A1A10]/70 mb-8">Lamentamos que no nos puedan acompañar, los tendremos en el corazón.</p>
+                        
+                        <a 
+                          href={`https://wa.me/526622795755?text=Hola Rosario, lamentablemente no podremos asistir (${invitadoEncontrado?.nombre}), pero te mandamos un fuerte abrazo y esperamos que la pases increíble.`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 px-6 rounded-sm tracking-widest uppercase text-[10px] hover:bg-[#128C7E] transition-colors shadow-md mx-auto"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          Mandar mensaje a Rosario
+                        </a>
+                     </div>
                    )}
                  </motion.div>
                ) : 
@@ -275,9 +354,11 @@ const InvitationContent = () => {
                    <div>
                      <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1">Invitación para</p>
                      <h3 className="font-serif text-3xl italic text-[#2A1A10]">{invitadoEncontrado.nombre}</h3>
-                     <div className="flex items-center justify-center gap-2 mt-3">
-                       <Users className="w-4 h-4 text-[#2A1A10]/50" />
-                       <span className="font-sans text-sm text-[#2A1A10]/70">Tienes <strong>{invitadoEncontrado.boletos} pases</strong> reservados</span>
+                     
+                     {/* ¡AQUÍ ES DONDE REVELAMOS LOS BOLETOS! */}
+                     <div className="flex items-center justify-center gap-2 mt-4 bg-[#F4F0EA] py-3 rounded-sm border border-[#2A1A10]/5">
+                       <Users className="w-5 h-5 text-[#C5A059]" />
+                       <span className="font-sans text-sm text-[#2A1A10]">Se han reservado <strong>{invitadoEncontrado.boletos} lugares</strong> para ustedes</span>
                      </div>
                    </div>
 
@@ -310,67 +391,17 @@ const InvitationContent = () => {
                  </motion.div>
                ) : 
                
-               /* ESTADO 3: MOSTRAR LISTA DE RESULTADOS */
-               resultadosBusqueda.length > 0 ? (
-                 <motion.div 
-                   key="resultados"
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1 }}
-                   className="flex flex-col gap-4 text-left bg-white p-6 md:p-8 border border-[#2A1A10]/10 shadow-xl rounded-sm"
-                 >
-                   <p className="text-center font-sans text-[#2A1A10]/70 text-sm mb-2">Selecciona tu invitación:</p>
-                   
-                   <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                     {resultadosBusqueda.map((invitado) => (
-                       <button
-                         key={invitado.id}
-                         onClick={() => seleccionarDeLista(invitado)}
-                         disabled={invitado.confirmado}
-                         className={`p-4 border rounded-sm text-left flex justify-between items-center transition-all ${
-                           invitado.confirmado 
-                             ? 'bg-gray-50 border-gray-200 cursor-not-allowed opacity-70' 
-                             : 'bg-[#F4F0EA]/30 border-[#2A1A10]/10 hover:border-[#C5A059] hover:bg-[#F4F0EA]'
-                         }`}
-                       >
-                         <div className="flex flex-col">
-                           <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
-                           <span className="text-[10px] uppercase tracking-widest text-[#2A1A10]/50 mt-1">
-                             {invitado.boletos} Pases
-                           </span>
-                         </div>
-                         {invitado.confirmado ? (
-                           <Lock className="w-4 h-4 text-gray-400" />
-                         ) : (
-                           <CheckCircle className="w-5 h-5 text-[#C5A059]/50" />
-                         )}
-                       </button>
-                     ))}
-                   </div>
-
-                   {errorBusqueda && (
-                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest mt-2">{errorBusqueda}</p>
-                   )}
-
-                   <button 
-                     onClick={limpiarBusqueda}
-                     className="mt-2 text-[10px] uppercase tracking-widest text-[#2A1A10]/40 font-bold hover:text-[#C5A059] transition-colors text-center w-full"
-                   >
-                     Buscar otro nombre
-                   </button>
-                 </motion.div>
-               ) : 
-
-               /* ESTADO 4: BUSCADOR INICIAL (Input) */
+               /* ESTADO 3: BUSCADOR INICIAL Y LISTA DE RESULTADOS EN VIVO */
                (
                  <motion.div 
                    key="buscador"
                    initial={{ opacity: 0 }}
                    animate={{ opacity: 1 }}
                    exit={{ opacity: 0 }}
-                   className="flex flex-col gap-5 text-left bg-white p-8 md:p-12 border border-[#2A1A10]/10 shadow-xl rounded-sm"
+                   className="flex flex-col gap-5 text-left bg-white p-6 md:p-12 border border-[#2A1A10]/10 shadow-xl rounded-sm"
                  >
                    <p className="mb-2 text-center font-sans text-[#2A1A10]/70 text-sm md:text-base leading-relaxed">
-                     Por favor, ingresa tu nombre o apellidos para buscar tu pase.
+                     Escribe tu apellido para encontrar tu invitación.
                    </p>
                    
                    <div className="relative">
@@ -378,24 +409,41 @@ const InvitationContent = () => {
                          type="text" 
                          value={busqueda}
                          onChange={(e) => setBusqueda(e.target.value)}
-                         onKeyDown={(e) => e.key === 'Enter' && buscarInvitado()}
-                         placeholder="Ej. Monge o Familia Pérez" 
+                         placeholder="Ej. Monge o Figueroa" 
                          className="w-full bg-[#F4F0EA]/50 border border-[#2A1A10]/10 p-4 pl-12 text-[#2A1A10] placeholder:text-[#2A1A10]/40 focus:outline-none focus:border-[#C5A059] transition font-sans text-sm rounded-sm uppercase" 
                        />
-                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059] w-5 h-5" />
+                       <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${cargando ? 'text-[#2A1A10] animate-pulse' : 'text-[#C5A059]'}`} />
                    </div>
                    
-                   {errorBusqueda && (
-                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest">{errorBusqueda}</p>
+                   {/* LISTA DE RESULTADOS (SIN MOSTRAR BOLETOS) */}
+                   {resultadosBusqueda.length > 0 && (
+                     <div className="flex flex-col gap-2 max-h-[250px] overflow-y-auto pr-2 mt-2 custom-scrollbar">
+                       <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1 font-bold">Selecciona tu familia:</p>
+                       {resultadosBusqueda.map((invitado) => (
+                         <button
+                           key={invitado.id}
+                           onClick={() => seleccionarDeLista(invitado)}
+                           disabled={invitado.confirmado}
+                           className={`p-4 border rounded-sm text-left flex justify-between items-center transition-all ${
+                             invitado.confirmado 
+                               ? 'bg-gray-50 border-gray-200 cursor-not-allowed opacity-70' 
+                               : 'bg-white border-[#2A1A10]/10 hover:border-[#C5A059] hover:bg-[#F4F0EA]/30'
+                           }`}
+                         >
+                           <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
+                           {invitado.confirmado ? (
+                             <Lock className="w-4 h-4 text-gray-400" />
+                           ) : (
+                             <CheckCircle className="w-5 h-5 text-[#C5A059]/30" />
+                           )}
+                         </button>
+                       ))}
+                     </div>
                    )}
 
-                   <button 
-                     onClick={buscarInvitado}
-                     disabled={cargando || busqueda.length < 2}
-                     className="mt-2 w-full bg-[#C5A059] text-white font-bold py-4 rounded-sm tracking-[0.2em] uppercase text-xs hover:bg-[#2A1A10] transition-colors shadow-md active:scale-95 disabled:opacity-50 flex justify-center items-center"
-                   >
-                     {cargando ? "BUSCANDO..." : "BUSCAR INVITACIÓN"}
-                   </button>
+                   {errorBusqueda && (
+                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest mt-2">{errorBusqueda}</p>
+                   )}
                  </motion.div>
                )}
              </AnimatePresence>

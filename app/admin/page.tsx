@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
-import { Users, Lock, LogOut, RefreshCcw, CheckCircle, XCircle, Clock, RotateCcw } from "lucide-react";
+import { Users, Lock, LogOut, RefreshCcw, CheckCircle, XCircle, Clock, RotateCcw, Trash2 } from "lucide-react";
 
 type Invitado = {
   id: string;
@@ -60,7 +60,7 @@ export default function AdminPanel() {
     }
   };
 
-  // Función estrella: Permitir que un invitado vuelva a votar si se equivocó
+  // Función para reiniciar un solo invitado
   const handleReset = async (id: string, nombre: string) => {
     const isConfirmed = window.confirm(
       `¿Deseas reiniciar a "${nombre}"? Podrán volver a buscarse y confirmar desde cero.`
@@ -78,10 +78,41 @@ export default function AdminPanel() {
           .eq("id", id);
 
         if (error) throw error;
-        fetchInvitados(); // Recargamos la lista
+        fetchInvitados();
       } catch (error) {
         console.error("Error al reiniciar:", error);
         alert("Hubo un error al actualizar.");
+      }
+    }
+  };
+
+  // NUEVA FUNCIÓN: Reinicio Masivo de Pruebas
+  const handleClearAllTests = async () => {
+    const isConfirmed = window.confirm(
+      "⚠️ ATENCIÓN: ¿Estás seguro de que quieres BORRAR TODAS LAS PRUEBAS?\n\nEsto devolverá a todos los invitados al estado 'Pendiente'. No se borrarán los nombres de la lista, solo sus respuestas."
+    );
+    
+    if (isConfirmed) {
+      setLoading(true);
+      try {
+        // Actualizamos todos los registros que no sean nulos (básicamente todos)
+        const { error } = await supabase
+          .from("invitados_lista")
+          .update({
+            confirmado: false,
+            asiste: null,
+            pases_confirmados: 0
+          })
+          .neq("id", "00000000-0000-0000-0000-000000000000"); 
+
+        if (error) throw error;
+        alert("Lista limpia. Todo está listo para enviar las invitaciones reales.");
+        fetchInvitados();
+      } catch (error) {
+        console.error("Error al limpiar base de datos:", error);
+        alert("Hubo un error al limpiar la base de datos.");
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -123,12 +154,21 @@ export default function AdminPanel() {
 
   return (
     <main className="min-h-screen bg-[#F4F0EA] font-sans text-[#2A1A10] pb-20">
-      <header className="bg-white border-b border-[#2A1A10]/10 sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm">
-        <div>
+      <header className="bg-white border-b border-[#2A1A10]/10 sticky top-0 z-10 px-6 py-4 flex flex-col md:flex-row gap-4 justify-between items-center shadow-sm">
+        <div className="text-center md:text-left">
           <h1 className="font-serif text-2xl italic text-[#2A1A10]">Panel de Control</h1>
           <p className="text-[10px] uppercase tracking-widest text-[#C5A059]">Rosario 50 Años</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          <button 
+            onClick={handleClearAllTests}
+            className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-red-500 font-bold hover:bg-red-50 px-3 py-2 rounded transition-colors"
+            title="Borrar todas las pruebas"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden md:inline">Limpiar Pruebas</span>
+          </button>
+          <div className="w-px h-6 bg-[#2A1A10]/10 mx-1"></div>
           <button onClick={fetchInvitados} className="text-[#C5A059] hover:text-[#2A1A10] transition-colors p-2" title="Actualizar">
             <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -182,7 +222,7 @@ export default function AdminPanel() {
                     <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
                     <span className="text-[10px] uppercase tracking-widest text-green-600 mt-1">{invitado.pases_confirmados} Pases</span>
                   </div>
-                  <button onClick={() => handleReset(invitado.id, invitado.nombre)} className="text-gray-300 hover:text-amber-500 transition-colors opacity-0 group-hover:opacity-100 p-2" title="Deshacer confirmación">
+                  <button onClick={() => handleReset(invitado.id, invitado.nombre)} className="text-gray-300 hover:text-amber-500 transition-colors md:opacity-0 group-hover:opacity-100 p-2" title="Deshacer confirmación">
                     <RotateCcw className="w-4 h-4" />
                   </button>
                 </div>
@@ -200,7 +240,7 @@ export default function AdminPanel() {
                     <span className="font-bold text-gray-500 text-sm line-through decoration-red-300">{invitado.nombre}</span>
                     <span className="text-[10px] uppercase tracking-widest text-red-400 mt-1">{invitado.boletos} Pases liberados</span>
                   </div>
-                  <button onClick={() => handleReset(invitado.id, invitado.nombre)} className="text-gray-300 hover:text-amber-500 transition-colors opacity-0 group-hover:opacity-100 p-2" title="Deshacer confirmación">
+                  <button onClick={() => handleReset(invitado.id, invitado.nombre)} className="text-gray-300 hover:text-amber-500 transition-colors md:opacity-0 group-hover:opacity-100 p-2" title="Deshacer confirmación">
                     <RotateCcw className="w-4 h-4" />
                   </button>
                 </div>

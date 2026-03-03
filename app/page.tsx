@@ -92,7 +92,7 @@ const InvitationContent = () => {
       }
     };
 
-    // Esperar 400ms después de que el usuario deje de teclear para no saturar la base de datos
+    // Esperar 400ms después de que el usuario deje de teclear
     const delayDebounceFn = setTimeout(() => {
       buscarEnVivo();
     }, 400);
@@ -137,11 +137,14 @@ const InvitationContent = () => {
     }
   };
 
+  // Función mejorada para limpiar todo y volver a buscar por alguien más
   const limpiarBusqueda = () => {
     setBusqueda("");
     setResultadosBusqueda([]);
     setInvitadoEncontrado(null);
     setErrorBusqueda("");
+    setConfirmadoExitoso(false);
+    setRespuestaFinal(null);
   };
 
   // Función para compartir en redes usando tecnología nativa del celular
@@ -320,6 +323,13 @@ const InvitationContent = () => {
                             <MessageCircle className="w-4 h-4" />
                             Avisar por WhatsApp
                           </a>
+                          
+                          <button 
+                            onClick={limpiarBusqueda}
+                            className="mt-4 text-[10px] uppercase tracking-widest text-[#2A1A10]/40 font-bold hover:text-[#C5A059] transition-colors pt-2 border-t border-[#2A1A10]/5"
+                          >
+                            Confirmar por alguien más
+                          </button>
                         </div>
                      </>
                    ) : (
@@ -339,6 +349,13 @@ const InvitationContent = () => {
                           <MessageCircle className="w-4 h-4" />
                           Mandar mensaje a Rosario
                         </a>
+
+                        <button 
+                          onClick={limpiarBusqueda}
+                          className="mt-8 text-[10px] uppercase tracking-widest text-[#2A1A10]/40 font-bold hover:text-[#C5A059] transition-colors pt-4 border-t border-[#2A1A10]/5 w-full block"
+                        >
+                          Confirmar por alguien más
+                        </button>
                      </div>
                    )}
                  </motion.div>

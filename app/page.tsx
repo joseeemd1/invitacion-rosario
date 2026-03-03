@@ -4,10 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../components/Unboxing";
-import { Clock, MapPin, Copy, Check, CalendarDays, Gift } from "lucide-react";
+import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
-// --- MOTOR DE PARTÍCULAS ---
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
@@ -38,13 +37,16 @@ const Particles = () => {
   );
 };
 
-// --- CONTENIDO DE LA INVITACIÓN ---
 const InvitationContent = () => {
-  const [fullName, setFullName] = useState("");
-  const [companions, setCompanions] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const [savedData, setSavedData] = useState<{name: string, count: string} | null>(null);
+  // Estados del Buscador
+  const [busqueda, setBusqueda] = useState("");
+  const [invitadoEncontrado, setInvitadoEncontrado] = useState<any>(null);
+  const [errorBusqueda, setErrorBusqueda] = useState("");
+  const [cargando, setCargando] = useState(false);
+  const [confirmadoExitoso, setConfirmadoExitoso] = useState(false);
+  
+  // Estado para saber qué respondió
+  const [respuestaFinal, setRespuestaFinal] = useState<{asiste: boolean, pases: number} | null>(null);
 
   const galleryRef = useRef(null);
   const { scrollYProgress: galleryScroll } = useScroll({ target: galleryRef, offset: ["start end", "end start"] });
@@ -56,59 +58,74 @@ const InvitationContent = () => {
   const yHeroBg = useTransform(heroScroll, [0, 1], ["0%", "30%"]);
   const opacityHeroText = useTransform(heroScroll, [0, 0.8], [1, 0]);
 
-  useEffect(() => {
-    const localData = localStorage.getItem("rsvp_rosario");
-    if (localData) {
-      const parsed = JSON.parse(localData);
-      setSavedData(parsed);
-      setIsConfirmed(true);
-    }
-  }, []);
-
-  // Función para obtener o generar la huella digital del celular
-  const getDeviceId = () => {
-    let id = localStorage.getItem("device_id_rosario");
-    if (!id) {
-      id = 'dev_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-      localStorage.setItem("device_id_rosario", id);
-    }
-    return id;
-  };
-
-  const handleRSVPSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!fullName || !companions) return;
+  // FUNCIÓN: Buscar en Supabase
+  const buscarInvitado = async () => {
+    if (busqueda.length < 3) return;
+    setCargando(true);
+    setErrorBusqueda("");
     
-    setIsSubmitting(true);
-    const deviceId = getDeviceId(); // Sacamos la huella del celular
-
     try {
-      // Mandamos la huella junto con los datos
-      const { error } = await supabase
-        .from('guests')
-        .insert([{ full_name: fullName, companions: parseInt(companions), device_id: deviceId }]);
+      const { data, error } = await supabase
+        .from("invitados_lista")
+        .select("*")
+        .ilike("nombre", `%${busqueda}%`); // Busca coincidencias flexibles
 
       if (error) throw error;
 
-      const rsvpData = { name: fullName, count: companions };
-      localStorage.setItem("rsvp_rosario", JSON.stringify(rsvpData));
-      
-      setSavedData(rsvpData);
-      setIsConfirmed(true);
-    } catch (error) {
-      console.error("Error al guardar asistencia:", error);
-      alert("Hubo un error al enviar tu confirmación. Revisa tu conexión a internet.");
+      if (!data || data.length === 0) {
+        setErrorBusqueda("No encontramos tu invitación. Intenta buscar solo por tu primer apellido (Ej: Monge).");
+        setInvitadoEncontrado(null);
+      } else if (data.length > 1) {
+        setErrorBusqueda("Encontramos varias familias con ese apellido. Escribe tu nombre más completo.");
+        setInvitadoEncontrado(null);
+      } else {
+        const invitado = data[0];
+        if (invitado.confirmado) {
+          setErrorBusqueda("Esta invitación ya fue confirmada o declinada anteriormente.");
+          setInvitadoEncontrado(null);
+        } else {
+          setInvitadoEncontrado(invitado);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorBusqueda("Hubo un error de conexión. Intenta de nuevo.");
     } finally {
-      setIsSubmitting(false);
+      setCargando(false);
     }
   };
 
-  const resetForm = () => {
-    localStorage.removeItem("rsvp_rosario");
-    setSavedData(null);
-    setIsConfirmed(false);
-    setFullName("");
-    setCompanions("");
+  // FUNCIÓN: Enviar la decisión (Sí o No)
+  const handleConfirmacion = async (asiste: boolean) => {
+    setCargando(true);
+    try {
+      const pases = asiste ? invitadoEncontrado.boletos : 0;
+      
+      const { error } = await supabase
+        .from("invitados_lista")
+        .update({
+          confirmado: true,
+          asiste: asiste,
+          pases_confirmados: pases
+        })
+        .eq("id", invitadoEncontrado.id);
+
+      if (error) throw error;
+
+      setRespuestaFinal({ asiste, pases });
+      setConfirmadoExitoso(true);
+    } catch (err) {
+      console.error(err);
+      alert("Error al guardar respuesta. Intenta de nuevo.");
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const limpiarBusqueda = () => {
+    setBusqueda("");
+    setInvitadoEncontrado(null);
+    setErrorBusqueda("");
   };
 
   return (
@@ -144,7 +161,7 @@ const InvitationContent = () => {
         </motion.div>
       </section>
 
-      {/* 2. LAYOUT EDITORIAL (Fotos completas sin recorte) */}
+      {/* 2. LAYOUT EDITORIAL */}
       <section ref={galleryRef} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-b border-[#2A1A10]/10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
             <motion.div style={{ y: yParallaxSlow }} className="md:col-span-7 relative w-full shadow-2xl border-4 border-white bg-white p-2">
@@ -165,44 +182,28 @@ const InvitationContent = () => {
         </div>
       </section>
 
-      {/* 3. LOS DETALLES DEL EVENTO */}
+      {/* 3. DÓNDE Y CUÁNDO */}
       <section className="py-32 px-6 mx-auto max-w-5xl text-center border-b border-[#2A1A10]/10 bg-white/20 relative">
          <h2 className="font-serif text-5xl text-[#2A1A10] italic mb-20">Dónde & Cuándo</h2>
          <div className="grid gap-8 md:grid-cols-2 relative z-10">
-            
             <div className="flex flex-col items-center bg-white/70 backdrop-blur-sm p-12 border border-[#2A1A10]/5 shadow-sm rounded-sm">
               <Clock className="h-10 w-10 text-[#C5A059] mb-6" strokeWidth={1}/>
               <h3 className="font-serif text-3xl text-[#2A1A10] mb-2">La Hora</h3>
               <p className="font-sans text-xl text-[#2A1A10]/80 font-medium mb-1">9:00 PM</p>
               <p className="text-xs text-[#2A1A10]/50 font-sans tracking-widest uppercase mt-2">Puntualidad sugerida</p>
             </div>
-
-            <a 
-              href="https://maps.app.goo.gl/DQ6fdtyN6GaEFFrN8" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex flex-col items-center bg-white/70 backdrop-blur-sm p-12 border border-[#2A1A10]/5 shadow-sm rounded-sm hover:shadow-lg transition-all duration-300 cursor-pointer group flex-grow"
-            >
+            <a href="https://maps.app.goo.gl/DQ6fdtyN6GaEFFrN8" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center bg-white/70 backdrop-blur-sm p-12 border border-[#2A1A10]/5 shadow-sm rounded-sm hover:shadow-lg transition-all duration-300 cursor-pointer group flex-grow">
               <MapPin className="h-14 w-14 text-[#C5A059] mb-6 group-hover:scale-110 transition-transform" strokeWidth={1}/>
               <h3 className="font-serif text-3xl text-[#2A1A10] mb-2">San Pedro Villadorada</h3>
               <p className="font-sans text-lg text-[#2A1A10]/80 font-medium mb-1">Terreno de la Palapa</p>
               <p className="text-[10px] md:text-xs text-[#2A1A10]/50 font-sans tracking-widest uppercase leading-relaxed mt-2 max-w-[250px]">
                 Carretera a Zamora Km 2.2, entrada a la izquierda en Privada Villa Dorada.<br/>Atrás de David Fimbres y María del Rosario.
               </p>
-              <span className="mt-6 text-[#C5A059] text-xs md:text-sm tracking-widest uppercase font-bold border-b border-[#C5A059]/30 pb-1 group-hover:border-[#C5A059] transition-colors">
-                Ver en Google Maps
-              </span>
+              <span className="mt-6 text-[#C5A059] text-xs md:text-sm tracking-widest uppercase font-bold border-b border-[#C5A059]/30 pb-1 group-hover:border-[#C5A059] transition-colors">Ver en Google Maps</span>
             </a>
-
          </div>
-
          <div className="flex justify-center mt-12 relative z-10">
-             <a 
-                href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cumplea%C3%B1os+50+de+Mar%C3%ADa+del+Rosario&dates=20260418T210000/20260419T020000&details=Celebraci%C3%B1on+especial+del+50+aniversario.&location=San+Pedro+Villadorada+/+Terreno+de+la+Palapa&sf=true&output=xml"
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-flex items-center gap-2 bg-[#2A1A10] text-[#E1D4C0] px-8 py-4 rounded-full font-sans text-xs tracking-widest font-bold uppercase hover:bg-[#C5A059] hover:text-white transition-colors shadow-md active:scale-95 group"
-             >
+             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cumplea%C3%B1os+50+de+Mar%C3%ADa+del+Rosario&dates=20260418T210000/20260419T020000&details=Celebraci%C3%B1on+especial+del+50+aniversario.&location=San+Pedro+Villadorada+/+Terreno+de+la+Palapa&sf=true&output=xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#2A1A10] text-[#E1D4C0] px-8 py-4 rounded-full font-sans text-xs tracking-widest font-bold uppercase hover:bg-[#C5A059] hover:text-white transition-colors shadow-md active:scale-95 group">
                 <CalendarDays className="h-4 w-4 text-[#C5A059] group-hover:text-white transition-colors" />
                 Agregar a la agenda
              </a>
@@ -221,79 +222,117 @@ const InvitationContent = () => {
         </div>
       </section>
 
-      {/* 5. RSVP DINÁMICO */}
+      {/* 5. BUSCADOR VIP RSVP */}
       <section className="py-32 px-6 text-center relative bg-[#F4F0EA]">
          <div className="relative z-10 max-w-xl mx-auto">
-             <p className="font-sans text-xs tracking-[0.4em] text-[#C5A059] uppercase mb-4 font-semibold">Confirma tu lugar</p>
+             <p className="font-sans text-xs tracking-[0.4em] text-[#C5A059] uppercase mb-4 font-semibold">Lista Exclusiva</p>
              <h2 className="font-serif text-6xl text-[#2A1A10] italic mb-8">Acompáñame</h2>
              
              <AnimatePresence mode="wait">
-               {isConfirmed ? (
+               {confirmadoExitoso ? (
                  <motion.div 
-                   key="confirmed"
+                   key="exito"
                    initial={{ opacity: 0, scale: 0.9 }}
                    animate={{ opacity: 1, scale: 1 }}
                    className="bg-white p-12 border border-[#C5A059]/30 shadow-2xl rounded-sm flex flex-col items-center"
                  >
-                   <div className="h-16 w-16 bg-[#F4F0EA] rounded-full flex items-center justify-center mb-6">
-                     <Check className="h-8 w-8 text-[#C5A059]" />
-                   </div>
-                   <h3 className="font-serif text-3xl text-[#2A1A10] mb-2 italic">¡Gracias, {savedData?.name}!</h3>
-                   <p className="font-sans text-[#2A1A10]/70 mb-8">Tu lugar para {savedData?.count} persona(s) ha sido reservado con honor.</p>
-                   <button onClick={resetForm} className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold border-b border-[#C5A059]/30 pb-1 hover:border-[#C5A059] transition-colors">
-                     Hacer nuevo registro
-                   </button>
+                   {respuestaFinal?.asiste ? (
+                     <>
+                        <div className="h-16 w-16 bg-[#F4F0EA] rounded-full flex items-center justify-center mb-6">
+                          <Check className="h-8 w-8 text-[#C5A059]" />
+                        </div>
+                        <h3 className="font-serif text-3xl text-[#2A1A10] mb-2 italic">¡Allá nos vemos!</h3>
+                        <p className="font-sans text-[#2A1A10]/70">Los {respuestaFinal.pases} lugares para {invitadoEncontrado?.nombre} están confirmados.</p>
+                     </>
+                   ) : (
+                     <>
+                        <div className="h-16 w-16 bg-[#F4F0EA] rounded-full flex items-center justify-center mb-6">
+                          <Check className="h-8 w-8 text-[#C5A059]" />
+                        </div>
+                        <h3 className="font-serif text-3xl text-[#2A1A10] mb-2 italic">Gracias por avisar</h3>
+                        <p className="font-sans text-[#2A1A10]/70">Lamentamos que no nos puedan acompañar, los tendremos en el corazón.</p>
+                     </>
+                   )}
                  </motion.div>
-               ) : (
-                 <motion.form 
-                   key="form"
+               ) : !invitadoEncontrado ? (
+                 <motion.div 
+                   key="buscador"
                    initial={{ opacity: 0 }}
                    animate={{ opacity: 1 }}
                    exit={{ opacity: 0 }}
-                   onSubmit={handleRSVPSubmit} 
                    className="flex flex-col gap-5 text-left bg-white p-8 md:p-12 border border-[#2A1A10]/10 shadow-xl rounded-sm"
                  >
-                   <p className="mb-6 text-center font-sans text-[#2A1A10]/70 text-sm md:text-base leading-relaxed">
-                     Por favor, confirma tu asistencia antes del 1 de Abril.
+                   <p className="mb-2 text-center font-sans text-[#2A1A10]/70 text-sm md:text-base leading-relaxed">
+                     Por favor, busca tu nombre o tus apellidos para confirmar tu asistencia.
                    </p>
-                   <div>
-                       <label className="font-sans text-[10px] uppercase tracking-widest text-[#2A1A10]/50 mb-2 block font-bold">Nombre completo / Familia</label>
+                   
+                   <div className="relative">
                        <input 
-                         required
                          type="text" 
-                         value={fullName}
-                         onChange={(e) => setFullName(e.target.value)}
-                         placeholder="Ej. Familia Pérez Solís" 
-                         className="w-full bg-[#F4F0EA]/50 border border-[#2A1A10]/10 p-4 text-[#2A1A10] placeholder:text-[#2A1A10]/30 focus:outline-none focus:border-[#C5A059] transition font-sans text-sm rounded-sm" 
+                         value={busqueda}
+                         onChange={(e) => setBusqueda(e.target.value)}
+                         onKeyDown={(e) => e.key === 'Enter' && buscarInvitado()}
+                         placeholder="Ej. Familia Pérez Solís o Monge" 
+                         className="w-full bg-[#F4F0EA]/50 border border-[#2A1A10]/10 p-4 pl-12 text-[#2A1A10] placeholder:text-[#2A1A10]/40 focus:outline-none focus:border-[#C5A059] transition font-sans text-sm rounded-sm uppercase" 
                        />
+                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059] w-5 h-5" />
                    </div>
-                   <div>
-                       <label className="font-sans text-[10px] uppercase tracking-widest text-[#2A1A10]/50 mb-2 block font-bold">Número de asistentes totales</label>
-                       <div className="relative">
-                           <select 
-                             required
-                             value={companions}
-                             onChange={(e) => setCompanions(e.target.value)}
-                             className="w-full bg-[#F4F0EA]/50 border border-[#2A1A10]/10 p-4 text-[#2A1A10] focus:outline-none focus:border-[#C5A059] transition font-sans text-sm appearance-none cursor-pointer rounded-sm"
-                           >
-                             <option value="" disabled>Selecciona cantidad</option>
-                             <option value="1">1 Persona</option>
-                             <option value="2">2 Personas</option>
-                             <option value="3">3 Personas</option>
-                             <option value="4">4 Personas</option>
-                             <option value="5">5 Personas</option>
-                           </select>
-                           <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#C5A059] font-serif italic text-xl">v</div>
-                       </div>
-                   </div>
+                   
+                   {errorBusqueda && (
+                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest">{errorBusqueda}</p>
+                   )}
+
                    <button 
-                     type="submit" 
-                     disabled={isSubmitting}
-                     className="mt-4 w-full bg-[#C5A059] text-white font-bold py-4 rounded-sm tracking-[0.2em] uppercase text-xs hover:bg-[#2A1A10] transition-colors shadow-md active:scale-95 disabled:opacity-50 flex justify-center items-center"
+                     onClick={buscarInvitado}
+                     disabled={cargando || busqueda.length < 3}
+                     className="mt-2 w-full bg-[#C5A059] text-white font-bold py-4 rounded-sm tracking-[0.2em] uppercase text-xs hover:bg-[#2A1A10] transition-colors shadow-md active:scale-95 disabled:opacity-50 flex justify-center items-center"
                    >
-                     {isSubmitting ? "ENVIANDO..." : "ENVIAR CONFIRMACIÓN"}
+                     {cargando ? "BUSCANDO..." : "BUSCAR INVITACIÓN"}
                    </button>
-                 </motion.form>
+                 </motion.div>
+               ) : (
+                 <motion.div 
+                   key="decision"
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   className="flex flex-col gap-6 text-center bg-white p-8 md:p-12 border border-[#C5A059]/30 shadow-2xl rounded-sm"
+                 >
+                   <div>
+                     <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1">Invitación Encontrada para</p>
+                     <h3 className="font-serif text-3xl italic text-[#2A1A10]">{invitadoEncontrado.nombre}</h3>
+                     <div className="flex items-center justify-center gap-2 mt-3">
+                       <Users className="w-4 h-4 text-[#2A1A10]/50" />
+                       <span className="font-sans text-sm text-[#2A1A10]/70">Tienes <strong>{invitadoEncontrado.boletos} pases</strong> reservados</span>
+                     </div>
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-4 mt-4">
+                     <button 
+                       onClick={() => handleConfirmacion(true)}
+                       disabled={cargando}
+                       className="bg-[#2A1A10] text-white py-4 rounded-sm flex flex-col items-center justify-center gap-2 hover:bg-[#C5A059] transition-colors shadow-md disabled:opacity-50"
+                     >
+                       <CheckCircle className="w-5 h-5" />
+                       <span className="text-[10px] uppercase font-bold tracking-widest">Sí Asistiremos</span>
+                     </button>
+                     
+                     <button 
+                       onClick={() => handleConfirmacion(false)}
+                       disabled={cargando}
+                       className="bg-white border border-[#2A1A10]/10 text-[#2A1A10] py-4 rounded-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50"
+                     >
+                       <XCircle className="w-5 h-5 text-[#2A1A10]/50" />
+                       <span className="text-[10px] uppercase font-bold tracking-widest text-[#2A1A10]/70">No podremos</span>
+                     </button>
+                   </div>
+
+                   <button 
+                     onClick={limpiarBusqueda}
+                     className="mt-4 text-[10px] uppercase tracking-widest text-[#2A1A10]/40 font-bold hover:text-[#C5A059] transition-colors"
+                   >
+                     Buscar otro nombre
+                   </button>
+                 </motion.div>
                )}
              </AnimatePresence>
          </div>
@@ -306,7 +345,6 @@ const InvitationContent = () => {
   );
 };
 
-// --- COMPONENTE PRINCIPAL (Cerebro del Proyecto) ---
 export default function Home() {
   const [hasOpened, setHasOpened] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);

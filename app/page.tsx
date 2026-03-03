@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../components/Unboxing";
-import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Share2 } from "lucide-react";
+import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Facebook, Share2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 const Particles = () => {
@@ -145,7 +145,7 @@ const InvitationContent = () => {
   };
 
   // Función para compartir en redes usando tecnología nativa del celular
-  const compartirPase = async () => {
+  const compartirPase = async (redSocial: string) => {
     const shareData = {
       title: '¡Confirmo mi asistencia!',
       text: '¡Listos para celebrar los 50 años de Rosario! 🎉 Nos vemos el 18 de Abril.',
@@ -156,7 +156,7 @@ const InvitationContent = () => {
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
-        alert("Tómale una captura de pantalla a este pase para subirlo a tu historia de Instagram. 📸");
+        alert(`Tómale una captura de pantalla a este pase para subirlo a tu historia de ${redSocial}. 📸`);
       }
     } catch (err) {
       console.log("Error compartiendo:", err);
@@ -275,26 +275,21 @@ const InvitationContent = () => {
                  >
                    {respuestaFinal?.asiste ? (
                      <>
-                        {/* PASE VIP VISUAL (Ideal para Screenshot) */}
+                        {/* PASE VIP VISUAL (Sin número de lugares, ideal para Screenshot) */}
                         <div className="bg-[#2A1A10] w-full p-10 text-[#F4F0EA] relative overflow-hidden border-b-4 border-[#C5A059]">
                           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/noise.png')] mix-blend-overlay"></div>
                           <p className="text-[10px] tracking-[0.3em] uppercase mb-2 text-[#C5A059]">Confirmación Oficial</p>
                           <h3 className="font-serif text-4xl italic mb-6">¡Gracias!</h3>
                           
-                          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-sm mb-4">
-                            <p className="text-sm font-sans uppercase tracking-widest opacity-70 mb-1">Pase A Nombre De:</p>
+                          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-sm mb-6 shadow-inner">
+                            <p className="text-[10px] font-sans uppercase tracking-widest opacity-70 mb-2">Pase A Nombre De:</p>
                             <p className="font-serif text-2xl text-white">{invitadoEncontrado?.nombre}</p>
                           </div>
                           
-                          <div className="flex justify-center items-center gap-4">
-                            <div className="text-center">
-                              <p className="text-[10px] uppercase tracking-widest opacity-70 mb-1">Lugares</p>
-                              <p className="font-serif text-3xl text-[#C5A059]">{respuestaFinal.pases}</p>
-                            </div>
-                            <div className="w-px h-10 bg-white/20"></div>
-                            <div className="text-center">
-                              <p className="text-[10px] uppercase tracking-widest opacity-70 mb-1">Fecha</p>
-                              <p className="font-serif text-xl mt-1">18 ABR</p>
+                          <div className="flex justify-center items-center">
+                            <div className="text-center px-8 py-2">
+                              <p className="text-[10px] uppercase tracking-widest opacity-70 mb-1">Fecha del Evento</p>
+                              <p className="font-serif text-2xl text-[#C5A059] mt-1">18 ABRIL</p>
                             </div>
                           </div>
                         </div>
@@ -305,16 +300,22 @@ const InvitationContent = () => {
                             Toma captura de pantalla a tu pase y compártelo, o avísale a la festejada.
                           </p>
                           
-                          <button onClick={compartirPase} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[10px] hover:opacity-90 transition-opacity shadow-md">
-                            <Instagram className="w-4 h-4" />
-                            Subir a mi Historia
-                          </button>
+                          <div className="grid grid-cols-2 gap-3">
+                            <button onClick={() => compartirPase('Instagram')} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[9px] md:text-[10px] hover:opacity-90 transition-opacity shadow-md">
+                              <Instagram className="w-4 h-4" />
+                              Historia IG
+                            </button>
+                            <button onClick={() => compartirPase('Facebook')} className="w-full flex items-center justify-center gap-2 bg-[#1877F2] text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[9px] md:text-[10px] hover:opacity-90 transition-opacity shadow-md">
+                              <Facebook className="w-4 h-4" />
+                              Historia FB
+                            </button>
+                          </div>
 
                           <a 
                             href={`https://wa.me/526622795755?text=¡Hola Rosario! Ya confirmamos nuestra asistencia a tu fiesta para los ${respuestaFinal.pases} lugares de: ${invitadoEncontrado?.nombre}. ¡Allá nos vemos! 🎉`}
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[10px] hover:bg-[#128C7E] transition-colors shadow-md"
+                            className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-sm tracking-widest uppercase text-[10px] hover:bg-[#128C7E] transition-colors shadow-md mt-1"
                           >
                             <MessageCircle className="w-4 h-4" />
                             Avisar por WhatsApp
@@ -355,7 +356,6 @@ const InvitationContent = () => {
                      <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1">Invitación para</p>
                      <h3 className="font-serif text-3xl italic text-[#2A1A10]">{invitadoEncontrado.nombre}</h3>
                      
-                     {/* ¡AQUÍ ES DONDE REVELAMOS LOS BOLETOS! */}
                      <div className="flex items-center justify-center gap-2 mt-4 bg-[#F4F0EA] py-3 rounded-sm border border-[#2A1A10]/5">
                        <Users className="w-5 h-5 text-[#C5A059]" />
                        <span className="font-sans text-sm text-[#2A1A10]">Se han reservado <strong>{invitadoEncontrado.boletos} lugares</strong> para ustedes</span>

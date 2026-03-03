@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../components/Unboxing";
-import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle } from "lucide-react";
+import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 const Particles = () => {
@@ -38,8 +38,9 @@ const Particles = () => {
 };
 
 const InvitationContent = () => {
-  // Estados del Buscador
+  // Estados del Buscador Dinámico
   const [busqueda, setBusqueda] = useState("");
+  const [resultadosBusqueda, setResultadosBusqueda] = useState<any[]>([]);
   const [invitadoEncontrado, setInvitadoEncontrado] = useState<any>(null);
   const [errorBusqueda, setErrorBusqueda] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -58,40 +59,44 @@ const InvitationContent = () => {
   const yHeroBg = useTransform(heroScroll, [0, 1], ["0%", "30%"]);
   const opacityHeroText = useTransform(heroScroll, [0, 0.8], [1, 0]);
 
-  // FUNCIÓN: Buscar en Supabase
+  // FUNCIÓN: Buscar coincidencias en Supabase
   const buscarInvitado = async () => {
-    if (busqueda.length < 3) return;
+    if (busqueda.length < 2) return;
     setCargando(true);
     setErrorBusqueda("");
+    setResultadosBusqueda([]);
+    setInvitadoEncontrado(null);
     
     try {
       const { data, error } = await supabase
         .from("invitados_lista")
         .select("*")
-        .ilike("nombre", `%${busqueda}%`); // Busca coincidencias flexibles
+        .ilike("nombre", `%${busqueda}%`) // Busca coincidencias parciales
+        .order("nombre", { ascending: true }); // Ordena alfabéticamente
 
       if (error) throw error;
 
       if (!data || data.length === 0) {
-        setErrorBusqueda("No encontramos tu invitación. Intenta buscar solo por tu primer apellido (Ej: Monge).");
-        setInvitadoEncontrado(null);
-      } else if (data.length > 1) {
-        setErrorBusqueda("Encontramos varias familias con ese apellido. Escribe tu nombre más completo.");
-        setInvitadoEncontrado(null);
+        setErrorBusqueda("No encontramos invitaciones con ese nombre. Intenta buscar solo por un apellido.");
       } else {
-        const invitado = data[0];
-        if (invitado.confirmado) {
-          setErrorBusqueda("Esta invitación ya fue confirmada o declinada anteriormente.");
-          setInvitadoEncontrado(null);
-        } else {
-          setInvitadoEncontrado(invitado);
-        }
+        setResultadosBusqueda(data); // Guardamos toda la lista de opciones
       }
     } catch (err) {
       console.error(err);
       setErrorBusqueda("Hubo un error de conexión. Intenta de nuevo.");
     } finally {
       setCargando(false);
+    }
+  };
+
+  // FUNCIÓN: Seleccionar a la persona de la lista
+  const seleccionarDeLista = (invitado: any) => {
+    if (invitado.confirmado) {
+      setErrorBusqueda("Esta invitación ya fue confirmada o declinada anteriormente.");
+    } else {
+      setInvitadoEncontrado(invitado);
+      setResultadosBusqueda([]); // Ocultamos la lista
+      setErrorBusqueda("");
     }
   };
 
@@ -124,6 +129,7 @@ const InvitationContent = () => {
 
   const limpiarBusqueda = () => {
     setBusqueda("");
+    setResultadosBusqueda([]);
     setInvitadoEncontrado(null);
     setErrorBusqueda("");
   };
@@ -222,13 +228,15 @@ const InvitationContent = () => {
         </div>
       </section>
 
-      {/* 5. BUSCADOR VIP RSVP */}
+      {/* 5. BUSCADOR VIP RSVP CON LISTA DE OPCIONES */}
       <section className="py-32 px-6 text-center relative bg-[#F4F0EA]">
          <div className="relative z-10 max-w-xl mx-auto">
              <p className="font-sans text-xs tracking-[0.4em] text-[#C5A059] uppercase mb-4 font-semibold">Lista Exclusiva</p>
              <h2 className="font-serif text-6xl text-[#2A1A10] italic mb-8">Acompáñame</h2>
              
              <AnimatePresence mode="wait">
+               
+               {/* ESTADO 1: ÉXITO AL CONFIRMAR */}
                {confirmadoExitoso ? (
                  <motion.div 
                    key="exito"
@@ -254,43 +262,10 @@ const InvitationContent = () => {
                      </>
                    )}
                  </motion.div>
-               ) : !invitadoEncontrado ? (
-                 <motion.div 
-                   key="buscador"
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1 }}
-                   exit={{ opacity: 0 }}
-                   className="flex flex-col gap-5 text-left bg-white p-8 md:p-12 border border-[#2A1A10]/10 shadow-xl rounded-sm"
-                 >
-                   <p className="mb-2 text-center font-sans text-[#2A1A10]/70 text-sm md:text-base leading-relaxed">
-                     Por favor, busca tu nombre o tus apellidos para confirmar tu asistencia.
-                   </p>
-                   
-                   <div className="relative">
-                       <input 
-                         type="text" 
-                         value={busqueda}
-                         onChange={(e) => setBusqueda(e.target.value)}
-                         onKeyDown={(e) => e.key === 'Enter' && buscarInvitado()}
-                         placeholder="Ej. Familia Pérez Solís o Monge" 
-                         className="w-full bg-[#F4F0EA]/50 border border-[#2A1A10]/10 p-4 pl-12 text-[#2A1A10] placeholder:text-[#2A1A10]/40 focus:outline-none focus:border-[#C5A059] transition font-sans text-sm rounded-sm uppercase" 
-                       />
-                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059] w-5 h-5" />
-                   </div>
-                   
-                   {errorBusqueda && (
-                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest">{errorBusqueda}</p>
-                   )}
-
-                   <button 
-                     onClick={buscarInvitado}
-                     disabled={cargando || busqueda.length < 3}
-                     className="mt-2 w-full bg-[#C5A059] text-white font-bold py-4 rounded-sm tracking-[0.2em] uppercase text-xs hover:bg-[#2A1A10] transition-colors shadow-md active:scale-95 disabled:opacity-50 flex justify-center items-center"
-                   >
-                     {cargando ? "BUSCANDO..." : "BUSCAR INVITACIÓN"}
-                   </button>
-                 </motion.div>
-               ) : (
+               ) : 
+               
+               /* ESTADO 2: SELECCIÓN DE SÍ O NO (Una vez elegido el nombre) */
+               invitadoEncontrado ? (
                  <motion.div 
                    key="decision"
                    initial={{ opacity: 0, y: 20 }}
@@ -298,7 +273,7 @@ const InvitationContent = () => {
                    className="flex flex-col gap-6 text-center bg-white p-8 md:p-12 border border-[#C5A059]/30 shadow-2xl rounded-sm"
                  >
                    <div>
-                     <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1">Invitación Encontrada para</p>
+                     <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1">Invitación para</p>
                      <h3 className="font-serif text-3xl italic text-[#2A1A10]">{invitadoEncontrado.nombre}</h3>
                      <div className="flex items-center justify-center gap-2 mt-3">
                        <Users className="w-4 h-4 text-[#2A1A10]/50" />
@@ -330,7 +305,96 @@ const InvitationContent = () => {
                      onClick={limpiarBusqueda}
                      className="mt-4 text-[10px] uppercase tracking-widest text-[#2A1A10]/40 font-bold hover:text-[#C5A059] transition-colors"
                    >
+                     Volver atrás
+                   </button>
+                 </motion.div>
+               ) : 
+               
+               /* ESTADO 3: MOSTRAR LISTA DE RESULTADOS */
+               resultadosBusqueda.length > 0 ? (
+                 <motion.div 
+                   key="resultados"
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                   className="flex flex-col gap-4 text-left bg-white p-6 md:p-8 border border-[#2A1A10]/10 shadow-xl rounded-sm"
+                 >
+                   <p className="text-center font-sans text-[#2A1A10]/70 text-sm mb-2">Selecciona tu invitación:</p>
+                   
+                   <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                     {resultadosBusqueda.map((invitado) => (
+                       <button
+                         key={invitado.id}
+                         onClick={() => seleccionarDeLista(invitado)}
+                         disabled={invitado.confirmado}
+                         className={`p-4 border rounded-sm text-left flex justify-between items-center transition-all ${
+                           invitado.confirmado 
+                             ? 'bg-gray-50 border-gray-200 cursor-not-allowed opacity-70' 
+                             : 'bg-[#F4F0EA]/30 border-[#2A1A10]/10 hover:border-[#C5A059] hover:bg-[#F4F0EA]'
+                         }`}
+                       >
+                         <div className="flex flex-col">
+                           <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
+                           <span className="text-[10px] uppercase tracking-widest text-[#2A1A10]/50 mt-1">
+                             {invitado.boletos} Pases
+                           </span>
+                         </div>
+                         {invitado.confirmado ? (
+                           <Lock className="w-4 h-4 text-gray-400" />
+                         ) : (
+                           <CheckCircle className="w-5 h-5 text-[#C5A059]/50" />
+                         )}
+                       </button>
+                     ))}
+                   </div>
+
+                   {errorBusqueda && (
+                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest mt-2">{errorBusqueda}</p>
+                   )}
+
+                   <button 
+                     onClick={limpiarBusqueda}
+                     className="mt-2 text-[10px] uppercase tracking-widest text-[#2A1A10]/40 font-bold hover:text-[#C5A059] transition-colors text-center w-full"
+                   >
                      Buscar otro nombre
+                   </button>
+                 </motion.div>
+               ) : 
+
+               /* ESTADO 4: BUSCADOR INICIAL (Input) */
+               (
+                 <motion.div 
+                   key="buscador"
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                   exit={{ opacity: 0 }}
+                   className="flex flex-col gap-5 text-left bg-white p-8 md:p-12 border border-[#2A1A10]/10 shadow-xl rounded-sm"
+                 >
+                   <p className="mb-2 text-center font-sans text-[#2A1A10]/70 text-sm md:text-base leading-relaxed">
+                     Por favor, ingresa tu nombre o apellidos para buscar tu pase.
+                   </p>
+                   
+                   <div className="relative">
+                       <input 
+                         type="text" 
+                         value={busqueda}
+                         onChange={(e) => setBusqueda(e.target.value)}
+                         onKeyDown={(e) => e.key === 'Enter' && buscarInvitado()}
+                         placeholder="Ej. Monge o Familia Pérez" 
+                         className="w-full bg-[#F4F0EA]/50 border border-[#2A1A10]/10 p-4 pl-12 text-[#2A1A10] placeholder:text-[#2A1A10]/40 focus:outline-none focus:border-[#C5A059] transition font-sans text-sm rounded-sm uppercase" 
+                       />
+                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059] w-5 h-5" />
+                   </div>
+                   
+                   {errorBusqueda && (
+                     <p className="text-red-500 text-[10px] uppercase font-bold text-center tracking-widest">{errorBusqueda}</p>
+                   )}
+
+                   <button 
+                     onClick={buscarInvitado}
+                     disabled={cargando || busqueda.length < 2}
+                     className="mt-2 w-full bg-[#C5A059] text-white font-bold py-4 rounded-sm tracking-[0.2em] uppercase text-xs hover:bg-[#2A1A10] transition-colors shadow-md active:scale-95 disabled:opacity-50 flex justify-center items-center"
+                   >
+                     {cargando ? "BUSCANDO..." : "BUSCAR INVITACIÓN"}
                    </button>
                  </motion.div>
                )}

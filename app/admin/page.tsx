@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
-import { Users, Lock, LogOut, RefreshCcw, UserCircle, Trash2, AlertTriangle, UserX } from "lucide-react";
+import { Users, Lock, LogOut, RefreshCcw, CheckCircle, XCircle, Clock, RotateCcw } from "lucide-react";
 
-type Guest = {
+type Invitado = {
   id: string;
-  full_name: string;
-  companions: number;
-  created_at: string;
-  device_id: string;
+  nombre: string;
+  boletos: number;
+  confirmado: boolean;
+  asiste: boolean | null;
+  pases_confirmados: number;
 };
 
 export default function AdminPanel() {
@@ -17,39 +18,41 @@ export default function AdminPanel() {
   const [password, setPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState(false);
   
-  const [guests, setGuests] = useState<Guest[]>([]);
+  const [invitados, setInvitados] = useState<Invitado[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const totalAttendees = guests.reduce((sum, guest) => sum + guest.companions, 0);
+  // Filtros para las listas
+  const invitadosSi = invitados.filter(i => i.confirmado && i.asiste);
+  const invitadosNo = invitados.filter(i => i.confirmado && !i.asiste);
+  const invitadosPendientes = invitados.filter(i => !i.confirmado);
 
-  const deviceCounts = guests.reduce((acc: Record<string, number>, guest) => {
-    if (guest.device_id) {
-      acc[guest.device_id] = (acc[guest.device_id] || 0) + 1;
-    }
-    return acc;
-  }, {});
+  // Estadísticas (por número de boletos)
+  const totalPases = invitados.reduce((sum, i) => sum + i.boletos, 0);
+  const pasesConfirmados = invitadosSi.reduce((sum, i) => sum + i.pases_confirmados, 0);
+  const pasesCancelados = invitadosNo.reduce((sum, i) => sum + i.boletos, 0);
+  const pasesPendientes = invitadosPendientes.reduce((sum, i) => sum + i.boletos, 0);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password.toLowerCase() === "rosario50") {
       setIsAuthenticated(true);
-      fetchGuests();
+      fetchInvitados();
     } else {
       setErrorLogin(true);
       setTimeout(() => setErrorLogin(false), 2000);
     }
   };
 
-  const fetchGuests = async () => {
+  const fetchInvitados = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("guests")
+        .from("invitados_lista")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("nombre", { ascending: true });
 
       if (error) throw error;
-      setGuests(data || []);
+      setInvitados(data || []);
     } catch (error) {
       console.error("Error al cargar invitados:", error);
     } finally {
@@ -57,51 +60,28 @@ export default function AdminPanel() {
     }
   };
 
-  const handleClearTests = async () => {
+  // Función estrella: Permitir que un invitado vuelva a votar si se equivocó
+  const handleReset = async (id: string, nombre: string) => {
     const isConfirmed = window.confirm(
-      "¿Estás seguro de que quieres BORRAR TODAS LAS PRUEBAS? Esto vaciará la lista de invitados por completo."
-    );
-    
-    if (isConfirmed) {
-      setLoading(true);
-      try {
-        const { error } = await supabase
-          .from("guests")
-          .delete()
-          .neq("id", "00000000-0000-0000-0000-000000000000");
-
-        if (error) throw error;
-        setGuests([]);
-        alert("Base de datos limpia.");
-      } catch (error) {
-        console.error("Error al limpiar:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  // NUEVA FUNCIÓN: Eliminar un solo registro
-  const handleDeleteGuest = async (id: string, name: string) => {
-    const isConfirmed = window.confirm(
-      `¿Estás seguro de que quieres eliminar la confirmación de "${name}"? Esta acción no se puede deshacer.`
+      `¿Deseas reiniciar a "${nombre}"? Podrán volver a buscarse y confirmar desde cero.`
     );
     
     if (isConfirmed) {
       try {
-        // Mostramos un estado de carga local rápido
         const { error } = await supabase
-          .from("guests")
-          .delete()
-          .eq("id", id); // Borramos exactamente el ID que seleccionaste
+          .from("invitados_lista")
+          .update({
+            confirmado: false,
+            asiste: null,
+            pases_confirmados: 0
+          })
+          .eq("id", id);
 
         if (error) throw error;
-        
-        // Actualizamos la lista automáticamente sin recargar la página
-        setGuests(guests.filter(guest => guest.id !== id));
+        fetchInvitados(); // Recargamos la lista
       } catch (error) {
-        console.error("Error al eliminar invitado:", error);
-        alert("Hubo un error al eliminar el registro.");
+        console.error("Error al reiniciar:", error);
+        alert("Hubo un error al actualizar.");
       }
     }
   };
@@ -109,7 +89,7 @@ export default function AdminPanel() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     setPassword("");
-    setGuests([]);
+    setInvitados([]);
   };
 
   if (!isAuthenticated) {
@@ -148,100 +128,100 @@ export default function AdminPanel() {
           <h1 className="font-serif text-2xl italic text-[#2A1A10]">Panel de Control</h1>
           <p className="text-[10px] uppercase tracking-widest text-[#C5A059]">Rosario 50 Años</p>
         </div>
-        <button onClick={handleLogout} className="text-[#2A1A10]/50 hover:text-red-500 transition-colors p-2">
-          <LogOut className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={fetchInvitados} className="text-[#C5A059] hover:text-[#2A1A10] transition-colors p-2" title="Actualizar">
+            <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+          <button onClick={handleLogout} className="text-[#2A1A10]/50 hover:text-red-500 transition-colors p-2" title="Salir">
+            <LogOut className="w-5 h-5" />
+          </button>
+        </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-4 mt-8">
-        <div className="grid grid-cols-2 gap-4 mb-10">
+      <div className="max-w-5xl mx-auto px-4 mt-8">
+        
+        {/* DASHBOARD DE ESTADÍSTICAS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <div className="bg-white p-6 shadow-md border border-[#2A1A10]/5 rounded-sm flex flex-col items-center justify-center text-center">
-            <Users className="w-6 h-6 text-[#C5A059] mb-2" />
-            <span className="text-4xl font-serif text-[#2A1A10] mb-1">{totalAttendees}</span>
-            <span className="text-[10px] uppercase tracking-widest text-[#2A1A10]/50">Lugares Totales</span>
+            <Users className="w-6 h-6 text-[#2A1A10]/40 mb-2" />
+            <span className="text-3xl md:text-4xl font-serif text-[#2A1A10] mb-1">{totalPases}</span>
+            <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-[#2A1A10]/50">Total Pases</span>
           </div>
-          <div className="bg-white p-6 shadow-md border border-[#2A1A10]/5 rounded-sm flex flex-col items-center justify-center text-center">
-            <UserCircle className="w-6 h-6 text-[#C5A059] mb-2" />
-            <span className="text-4xl font-serif text-[#2A1A10] mb-1">{guests.length}</span>
-            <span className="text-[10px] uppercase tracking-widest text-[#2A1A10]/50">Familias/Grupos</span>
+          <div className="bg-green-50 p-6 shadow-md border border-green-100 rounded-sm flex flex-col items-center justify-center text-center">
+            <CheckCircle className="w-6 h-6 text-green-600 mb-2" />
+            <span className="text-3xl md:text-4xl font-serif text-green-700 mb-1">{pasesConfirmados}</span>
+            <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-green-700/70">Asistirán</span>
           </div>
-        </div>
-
-        <div className="flex justify-between items-end mb-4 px-2">
-          <h2 className="font-serif text-2xl italic text-[#2A1A10]">Confirmaciones</h2>
-          
-          <div className="flex gap-4">
-            <button 
-              onClick={handleClearTests}
-              className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-red-500 font-bold hover:text-red-700 transition-colors bg-red-50 px-2 py-1 rounded"
-            >
-              <Trash2 className="w-3 h-3" />
-              Limpiar Pruebas
-            </button>
-
-            <button 
-              onClick={fetchGuests}
-              className="flex items-center gap-1 text-[10px] uppercase tracking-widest text-[#C5A059] font-bold hover:text-[#2A1A10] transition-colors"
-            >
-              <RefreshCcw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-              Actualizar
-            </button>
+          <div className="bg-red-50 p-6 shadow-md border border-red-100 rounded-sm flex flex-col items-center justify-center text-center">
+            <XCircle className="w-6 h-6 text-red-500 mb-2" />
+            <span className="text-3xl md:text-4xl font-serif text-red-600 mb-1">{pasesCancelados}</span>
+            <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-red-600/70">Cancelados</span>
+          </div>
+          <div className="bg-amber-50 p-6 shadow-md border border-amber-100 rounded-sm flex flex-col items-center justify-center text-center">
+            <Clock className="w-6 h-6 text-amber-500 mb-2" />
+            <span className="text-3xl md:text-4xl font-serif text-amber-600 mb-1">{pasesPendientes}</span>
+            <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-amber-600/70">Pendientes</span>
           </div>
         </div>
 
         {loading ? (
           <div className="text-center py-20 text-[#2A1A10]/50 text-sm tracking-widest uppercase">
-            Cargando lista...
-          </div>
-        ) : guests.length === 0 ? (
-          <div className="bg-white p-10 text-center border border-[#2A1A10]/10 rounded-sm shadow-sm">
-            <p className="text-[#2A1A10]/50 text-sm">Aún no hay invitados confirmados.</p>
+            Cargando base de datos...
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {guests.map((guest) => {
-              const isDuplicate = guest.device_id && deviceCounts[guest.device_id] > 1;
+          <div className="grid md:grid-cols-3 gap-6">
+            
+            {/* COLUMNA: ASISTIRÁN */}
+            <div className="flex flex-col gap-3">
+              <h2 className="font-serif text-xl italic text-green-700 border-b border-green-200 pb-2 mb-2 flex items-center justify-between">
+                Confirmados <span>({invitadosSi.length})</span>
+              </h2>
+              {invitadosSi.map((invitado) => (
+                <div key={invitado.id} className="bg-white p-4 border border-green-200 rounded-sm shadow-sm flex justify-between items-center group">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
+                    <span className="text-[10px] uppercase tracking-widest text-green-600 mt-1">{invitado.pases_confirmados} Pases</span>
+                  </div>
+                  <button onClick={() => handleReset(invitado.id, invitado.nombre)} className="text-gray-300 hover:text-amber-500 transition-colors opacity-0 group-hover:opacity-100 p-2" title="Deshacer confirmación">
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
 
-              return (
-                <div key={guest.id} className={`bg-white p-5 border ${isDuplicate ? 'border-amber-500' : 'border-[#2A1A10]/10'} rounded-sm shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow relative overflow-hidden`}>
-                  
-                  {isDuplicate && (
-                    <div className="bg-amber-100 text-amber-700 text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded-sm flex items-center gap-1 self-start">
-                      <AlertTriangle className="w-3 h-3" />
-                      Mismo celular (Posible copia)
-                    </div>
-                  )}
+            {/* COLUMNA: CANCELADOS */}
+            <div className="flex flex-col gap-3">
+              <h2 className="font-serif text-xl italic text-red-600 border-b border-red-200 pb-2 mb-2 flex items-center justify-between">
+                Cancelados <span>({invitadosNo.length})</span>
+              </h2>
+              {invitadosNo.map((invitado) => (
+                <div key={invitado.id} className="bg-white p-4 border border-red-200 rounded-sm shadow-sm flex justify-between items-center group">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-gray-500 text-sm line-through decoration-red-300">{invitado.nombre}</span>
+                    <span className="text-[10px] uppercase tracking-widest text-red-400 mt-1">{invitado.boletos} Pases liberados</span>
+                  </div>
+                  <button onClick={() => handleReset(invitado.id, invitado.nombre)} className="text-gray-300 hover:text-amber-500 transition-colors opacity-0 group-hover:opacity-100 p-2" title="Deshacer confirmación">
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
 
-                  <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <span className="font-bold text-[#2A1A10] uppercase text-sm">{guest.full_name}</span>
-                      <span className="text-[10px] text-[#2A1A10]/50 tracking-wider">
-                        {new Date(guest.created_at).toLocaleDateString('es-MX', { 
-                          day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' 
-                        })}
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                      {/* NUEVO BOTÓN PARA BORRAR REGISTRO INDIVIDUAL */}
-                      <button 
-                        onClick={() => handleDeleteGuest(guest.id, guest.full_name)}
-                        className="text-[#2A1A10]/30 hover:text-red-500 transition-colors p-2"
-                        title="Eliminar este invitado"
-                      >
-                        <UserX className="w-5 h-5" />
-                      </button>
-
-                      <div className="bg-[#F4F0EA] text-[#C5A059] px-4 py-2 rounded-sm font-bold border border-[#C5A059]/20 flex flex-col items-center min-w-[60px]">
-                        <span className="text-xl leading-none">{guest.companions}</span>
-                        <span className="text-[8px] uppercase tracking-widest mt-1">Pases</span>
-                      </div>
-                    </div>
-
+            {/* COLUMNA: PENDIENTES */}
+            <div className="flex flex-col gap-3">
+              <h2 className="font-serif text-xl italic text-amber-600 border-b border-amber-200 pb-2 mb-2 flex items-center justify-between">
+                Faltan por responder <span>({invitadosPendientes.length})</span>
+              </h2>
+              {invitadosPendientes.map((invitado) => (
+                <div key={invitado.id} className="bg-white/50 p-4 border border-amber-200/50 rounded-sm shadow-sm flex justify-between items-center opacity-70">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
+                    <span className="text-[10px] uppercase tracking-widest text-amber-600 mt-1">{invitado.boletos} Pases en espera</span>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
           </div>
         )}
       </div>

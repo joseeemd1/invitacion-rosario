@@ -72,7 +72,7 @@ const InvitationContent = () => {
       
       try {
         const { data, error } = await supabase
-          .from("invitados_lista")
+          .from("rosario_invitados")
           .select("*")
           .ilike("nombre", `%${busqueda}%`)
           .order("nombre", { ascending: true });
@@ -117,7 +117,7 @@ const InvitationContent = () => {
       const pases = asiste ? invitadoEncontrado.boletos : 0;
       
       const { error } = await supabase
-        .from("invitados_lista")
+        .from("rosario_invitados")
         .update({
           confirmado: true,
           asiste: asiste,

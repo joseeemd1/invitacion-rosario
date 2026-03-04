@@ -47,7 +47,7 @@ export default function AdminPanel() {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("invitados_lista")
+        .from("rosario_invitados")
         .select("*")
         .order("nombre", { ascending: true });
 
@@ -69,7 +69,7 @@ export default function AdminPanel() {
     if (isConfirmed) {
       try {
         const { error } = await supabase
-          .from("invitados_lista")
+          .from("rosario_invitados")
           .update({
             confirmado: false,
             asiste: null,
@@ -97,7 +97,7 @@ export default function AdminPanel() {
       try {
         // Actualizamos todos los registros que no sean nulos (básicamente todos)
         const { error } = await supabase
-          .from("invitados_lista")
+          .from("rosario_invitados")
           .update({
             confirmado: false,
             asiste: null,

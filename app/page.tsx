@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../components/Unboxing";
-import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Facebook, Share2 } from "lucide-react";
+import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Facebook, Share2, ChevronDown } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 const Particles = () => {
@@ -196,6 +196,24 @@ const InvitationContent = () => {
                 </p>
                 <div className="h-px w-12 md:w-24 bg-[#C5A059]/50"></div>
             </div>
+        </motion.div>
+
+        {/* NUEVO: INDICADOR DE SCROLL ANIMADO Y LUJOSO */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.5, duration: 1 }}
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 z-20 pointer-events-none"
+        >
+          <p className="font-sans text-[8px] md:text-[9px] tracking-[0.4em] text-[#2A1A10]/70 uppercase font-bold drop-shadow-sm">
+            Descubre
+          </p>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-5 h-5 text-[#C5A059] opacity-80" strokeWidth={1.5} />
+          </motion.div>
         </motion.div>
       </section>
 

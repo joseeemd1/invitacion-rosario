@@ -198,21 +198,21 @@ const InvitationContent = () => {
             </div>
         </motion.div>
 
-        {/* NUEVO: INDICADOR DE SCROLL ANIMADO Y LUJOSO */}
+        {/* INDICADOR DE SCROLL ANIMADO Y LUJOSO (AJUSTADO) */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.5, duration: 1 }}
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 z-20 pointer-events-none"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 1 }}
+          className="absolute bottom-20 md:bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 z-20 pointer-events-none"
         >
-          <p className="font-sans text-[8px] md:text-[9px] tracking-[0.4em] text-[#2A1A10]/70 uppercase font-bold drop-shadow-sm">
+          <p className="font-sans text-[10px] md:text-[11px] tracking-[0.5em] text-[#2A1A10] uppercase font-extrabold drop-shadow-md">
             Descubre
           </p>
           <motion.div
-            animate={{ y: [0, 8, 0] }}
+            animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ChevronDown className="w-5 h-5 text-[#C5A059] opacity-80" strokeWidth={1.5} />
+            <ChevronDown className="w-6 h-6 text-[#C5A059]" strokeWidth={2} />
           </motion.div>
         </motion.div>
       </section>

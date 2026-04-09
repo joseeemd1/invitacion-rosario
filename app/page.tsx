@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../components/Unboxing";
-import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Facebook, Share2, ChevronDown } from "lucide-react";
+import { Clock, MapPin, Check, CalendarDays, Gift, Search, Users, CheckCircle, XCircle, Lock, MessageCircle, Instagram, Facebook, ChevronDown } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 const Particles = () => {
@@ -38,7 +38,6 @@ const Particles = () => {
 };
 
 const InvitationContent = () => {
-  // Estados del Buscador Dinámico
   const [busqueda, setBusqueda] = useState("");
   const [resultadosBusqueda, setResultadosBusqueda] = useState<any[]>([]);
   const [invitadoEncontrado, setInvitadoEncontrado] = useState<any>(null);
@@ -58,7 +57,6 @@ const InvitationContent = () => {
   const yHeroBg = useTransform(heroScroll, [0, 1], ["0%", "30%"]);
   const opacityHeroText = useTransform(heroScroll, [0, 0.8], [1, 0]);
 
-  // BÚSQUEDA EN VIVO (Se ejecuta automáticamente al escribir)
   useEffect(() => {
     const buscarEnVivo = async () => {
       if (busqueda.length < 2) {
@@ -92,7 +90,6 @@ const InvitationContent = () => {
       }
     };
 
-    // Esperar 400ms después de que el usuario deje de teclear
     const delayDebounceFn = setTimeout(() => {
       buscarEnVivo();
     }, 400);
@@ -107,7 +104,7 @@ const InvitationContent = () => {
       setInvitadoEncontrado(invitado);
       setResultadosBusqueda([]);
       setErrorBusqueda("");
-      setBusqueda(""); // Limpiamos el buscador visualmente
+      setBusqueda(""); 
     }
   };
 
@@ -137,7 +134,6 @@ const InvitationContent = () => {
     }
   };
 
-  // Función mejorada para limpiar todo y volver a buscar por alguien más
   const limpiarBusqueda = () => {
     setBusqueda("");
     setResultadosBusqueda([]);
@@ -147,7 +143,6 @@ const InvitationContent = () => {
     setRespuestaFinal(null);
   };
 
-  // Función para compartir en redes usando tecnología nativa del celular
   const compartirPase = async (redSocial: string) => {
     const shareData = {
       title: '¡Confirmo mi asistencia!',
@@ -186,7 +181,7 @@ const InvitationContent = () => {
             <p className="font-sans text-xs md:text-sm tracking-[0.4em] text-[#2A1A10] uppercase mb-8 font-semibold drop-shadow-sm">
               Sábado 18 de Abril • San Pedro Villadorada
             </p>
-            <h1 className="font-serif text-7xl md:text-9xl italic text-[#2A1A10] leading-tight mb-8 drop-shadow-sm">
+            <h1 className="font-serif text-6xl sm:text-7xl md:text-9xl italic text-[#2A1A10] leading-tight mb-8 drop-shadow-sm">
               María del<br/>Rosario
             </h1>
             <div className="flex items-center justify-center gap-6 mb-16">
@@ -198,7 +193,6 @@ const InvitationContent = () => {
             </div>
         </motion.div>
 
-        {/* INDICADOR DE SCROLL ANIMADO Y LUJOSO (AJUSTADO) */}
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -225,7 +219,7 @@ const InvitationContent = () => {
             </motion.div>
             <div className="md:col-span-5 flex flex-col gap-10 md:gap-16">
                 <div className="text-center md:text-left py-4">
-                    <h2 className="font-serif text-4xl text-[#C5A059] italic mb-4">Medio siglo de vida</h2>
+                    <h2 className="font-serif text-3xl md:text-4xl text-[#C5A059] italic mb-4">Medio siglo de vida</h2>
                     <p className="font-sans text-sm text-[#2A1A10]/70 leading-relaxed tracking-wide">Celebrando la vida, la familia y los momentos que nos han traído hasta aquí. Una noche para el recuerdo.</p>
                 </div>
                 <motion.div style={{ y: yParallaxFast }} className="relative w-full shadow-xl md:-ml-20 z-10 border-[6px] border-[#F4F0EA] bg-[#F4F0EA] p-1">
@@ -240,7 +234,7 @@ const InvitationContent = () => {
 
       {/* 3. DÓNDE Y CUÁNDO */}
       <section className="py-32 px-6 mx-auto max-w-5xl text-center border-b border-[#2A1A10]/10 bg-white/20 relative">
-         <h2 className="font-serif text-5xl text-[#2A1A10] italic mb-20">Dónde & Cuándo</h2>
+         <h2 className="font-serif text-4xl md:text-5xl text-[#2A1A10] italic mb-16 md:mb-20">Dónde & Cuándo</h2>
          <div className="grid gap-8 md:grid-cols-2 relative z-10">
             <div className="flex flex-col items-center bg-white/70 backdrop-blur-sm p-12 border border-[#2A1A10]/5 shadow-sm rounded-sm">
               <Clock className="h-10 w-10 text-[#C5A059] mb-6" strokeWidth={1}/>
@@ -270,7 +264,7 @@ const InvitationContent = () => {
       <section className="py-24 px-6 text-center bg-[#E8E1D5] border-y border-[#2A1A10]/10 relative overflow-hidden">
         <div className="max-w-2xl mx-auto relative z-10">
             <Gift className="mx-auto h-12 w-12 text-[#C5A059] mb-6" strokeWidth={1} />
-            <h2 className="font-serif text-4xl text-[#2A1A10] italic mb-6">Mesa de Regalos</h2>
+            <h2 className="font-serif text-3xl md:text-4xl text-[#2A1A10] italic mb-6">Mesa de Regalos</h2>
             <p className="mb-0 font-sans text-sm md:text-base text-[#2A1A10]/80 leading-relaxed tracking-wide max-w-lg mx-auto bg-white/50 p-6 md:p-8 rounded-sm shadow-sm border border-[#2A1A10]/5">
               El mejor regalo que puedo recibir es compartir este día contigo. <br/><br/>
               Si deseas tener un detalle adicional, contaremos con un espacio designado en la recepción para obsequios y un buzón para sobres.
@@ -282,11 +276,10 @@ const InvitationContent = () => {
       <section className="py-32 px-6 text-center relative bg-[#F4F0EA]">
          <div className="relative z-10 max-w-xl mx-auto">
              <p className="font-sans text-xs tracking-[0.4em] text-[#C5A059] uppercase mb-4 font-semibold">Lista Exclusiva</p>
-             <h2 className="font-serif text-6xl text-[#2A1A10] italic mb-8">Acompáñame</h2>
+             <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl text-[#2A1A10] italic mb-8 break-words">Acompáñame</h2>
              
              <AnimatePresence mode="wait">
                
-               {/* ESTADO 1: ÉXITO AL CONFIRMAR (Pase VIP y Redes) */}
                {confirmadoExitoso ? (
                  <motion.div 
                    key="exito"
@@ -296,7 +289,6 @@ const InvitationContent = () => {
                  >
                    {respuestaFinal?.asiste ? (
                      <>
-                        {/* PASE VIP VISUAL (Sin número de lugares, ideal para Screenshot) */}
                         <div className="bg-[#2A1A10] w-full p-10 text-[#F4F0EA] relative overflow-hidden border-b-4 border-[#C5A059]">
                           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/noise.png')] mix-blend-overlay"></div>
                           <p className="text-[10px] tracking-[0.3em] uppercase mb-2 text-[#C5A059]">Confirmación Oficial</p>
@@ -304,7 +296,7 @@ const InvitationContent = () => {
                           
                           <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-sm mb-6 shadow-inner">
                             <p className="text-[10px] font-sans uppercase tracking-widest opacity-70 mb-2">Pase A Nombre De:</p>
-                            <p className="font-serif text-2xl text-white">{invitadoEncontrado?.nombre}</p>
+                            <p className="font-serif text-2xl text-white break-words">{invitadoEncontrado?.nombre}</p>
                           </div>
                           
                           <div className="flex justify-center items-center">
@@ -315,7 +307,6 @@ const InvitationContent = () => {
                           </div>
                         </div>
 
-                        {/* BOTONES SOCIALES */}
                         <div className="p-8 w-full flex flex-col gap-4 bg-white">
                           <p className="text-sm text-[#2A1A10]/70 mb-2 font-sans">
                             Toma captura de pantalla a tu pase y compártelo, o avísale a la festejada.
@@ -379,7 +370,6 @@ const InvitationContent = () => {
                  </motion.div>
                ) : 
                
-               /* ESTADO 2: SELECCIÓN DE SÍ O NO (Una vez elegido el nombre) */
                invitadoEncontrado ? (
                  <motion.div 
                    key="decision"
@@ -389,15 +379,15 @@ const InvitationContent = () => {
                  >
                    <div>
                      <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1">Invitación para</p>
-                     <h3 className="font-serif text-3xl italic text-[#2A1A10]">{invitadoEncontrado.nombre}</h3>
+                     <h3 className="font-serif text-2xl md:text-3xl italic text-[#2A1A10] break-words">{invitadoEncontrado.nombre}</h3>
                      
-                     <div className="flex items-center justify-center gap-2 mt-4 bg-[#F4F0EA] py-3 rounded-sm border border-[#2A1A10]/5">
+                     <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4 bg-[#F4F0EA] py-3 px-2 rounded-sm border border-[#2A1A10]/5">
                        <Users className="w-5 h-5 text-[#C5A059]" />
                        <span className="font-sans text-sm text-[#2A1A10]">Se han reservado <strong>{invitadoEncontrado.boletos} lugares</strong> para ustedes</span>
                      </div>
                    </div>
 
-                   <div className="grid grid-cols-2 gap-4 mt-4">
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                      <button 
                        onClick={() => handleConfirmacion(true)}
                        disabled={cargando}
@@ -426,7 +416,6 @@ const InvitationContent = () => {
                  </motion.div>
                ) : 
                
-               /* ESTADO 3: BUSCADOR INICIAL Y LISTA DE RESULTADOS EN VIVO */
                (
                  <motion.div 
                    key="buscador"
@@ -450,7 +439,6 @@ const InvitationContent = () => {
                        <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${cargando ? 'text-[#2A1A10] animate-pulse' : 'text-[#C5A059]'}`} />
                    </div>
                    
-                   {/* LISTA DE RESULTADOS (SIN MOSTRAR BOLETOS) */}
                    {resultadosBusqueda.length > 0 && (
                      <div className="flex flex-col gap-2 max-h-[250px] overflow-y-auto pr-2 mt-2 custom-scrollbar">
                        <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mb-1 font-bold">Selecciona tu familia:</p>
@@ -465,11 +453,11 @@ const InvitationContent = () => {
                                : 'bg-white border-[#2A1A10]/10 hover:border-[#C5A059] hover:bg-[#F4F0EA]/30'
                            }`}
                          >
-                           <span className="font-bold text-[#2A1A10] text-sm">{invitado.nombre}</span>
+                           <span className="font-bold text-[#2A1A10] text-sm break-words">{invitado.nombre}</span>
                            {invitado.confirmado ? (
-                             <Lock className="w-4 h-4 text-gray-400" />
+                             <Lock className="w-4 h-4 text-gray-400 flex-shrink-0 ml-2" />
                            ) : (
-                             <CheckCircle className="w-5 h-5 text-[#C5A059]/30" />
+                             <CheckCircle className="w-5 h-5 text-[#C5A059]/30 flex-shrink-0 ml-2" />
                            )}
                          </button>
                        ))}

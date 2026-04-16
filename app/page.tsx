@@ -454,11 +454,13 @@ const InvitationContent = () => {
                            }`}
                          >
                            <span className="font-bold text-[#2A1A10] text-sm break-words">{invitado.nombre}</span>
-                           {invitado.confirmado ? (
-                             <Lock className="w-4 h-4 text-gray-400 flex-shrink-0 ml-2" />
-                           ) : (
-                             <CheckCircle className="w-5 h-5 text-[#C5A059]/30 flex-shrink-0 ml-2" />
-                           )}
+{invitado.confirmado ? (
+  <span className="flex items-center gap-1 text-[9px] uppercase tracking-widest font-bold text-[#C5A059] flex-shrink-0 ml-2 bg-[#C5A059]/10 px-2 py-1 rounded-sm">
+    <Check className="w-3 h-3" /> Ya confirmado
+  </span>
+) : (
+  <CheckCircle className="w-5 h-5 text-[#C5A059]/30 flex-shrink-0 ml-2" />
+)}
                          </button>
                        ))}
                      </div>

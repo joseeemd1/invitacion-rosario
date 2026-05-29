@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Unboxing from "../../components/Unboxing"; // Ajustado para subir dos niveles
-import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Waves, Droplets } from "lucide-react";
+import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sun } from "lucide-react";
 
 // Partículas estilo "Burbujas y Destellos de Resort"
 const Particles = () => {
@@ -67,7 +67,7 @@ const InvitationContent = () => {
 
         <motion.div style={{ opacity: opacityHeroText }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 1.2 }} className="z-10 relative mt-20">
             <p className="font-sans text-xs md:text-sm tracking-[0.4em] text-[#1A4B5C] uppercase mb-8 font-extrabold drop-shadow-sm flex items-center justify-center gap-2">
-              <Waves className="w-4 h-4 text-[#D4AF37]" /> Pool Party
+              <Sun className="w-4 h-4 text-[#D4AF37]" />
             </p>
             <h1 className="font-serif text-7xl md:text-9xl italic text-[#1A4B5C] leading-tight mb-8 drop-shadow-sm">
               Paula
@@ -146,7 +146,7 @@ const InvitationContent = () => {
          {/* DRESS CODE ALBERCADA */}
          <div className="mt-8 bg-[#1A4B5C] text-white p-10 rounded-sm shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/10 rounded-full blur-2xl translate-x-10 -translate-y-10"></div>
-            <Droplets className="mx-auto h-10 w-10 text-[#D4AF37] mb-4" strokeWidth={1.5} />
+            <Sun className="mx-auto h-10 w-10 text-[#D4AF37] mb-4" strokeWidth={1.5} />
             <h3 className="font-serif text-3xl italic mb-3">No olvides...</h3>
             <p className="font-sans text-sm md:text-base font-bold tracking-widest uppercase text-white/90">
               Traer tu bikini y traje de baño

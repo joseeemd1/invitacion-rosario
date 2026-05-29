@@ -5,35 +5,49 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Lenis from "lenis";
 import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sparkles, Star, Music, Heart } from "lucide-react";
 
-// 1. MOTOR DE EFECTOS COWGIRL (Estrellas, Destellos y Círculos flotantes)
+// 1. MOTOR DE VECTORES COWGIRL (Componentes individuales corregidos)
+const StarIcon = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+const HorseshoeIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 22V9a7 7 0 0 1 14 0v13"/><path d="M9 22V11a3 3 0 0 1 6 0v11"/></svg>;
+const CactusIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 2v20"/><path d="M7 10v4a3 3 0 0 0 3 3h2"/><path d="M17 13v-3a3 3 0 0 0-3-3h-2"/></svg>;
+const SparkleVector = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.29 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.29L12 21l1.9-5.8a2 2 0 0 1 1.29-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.29L12 3Z"/></svg>;
+
+const CowgirlIconsList = [StarIcon, HorseshoeIcon, CactusIcon, SparkleVector];
+
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {[...Array(40)].map((_, i) => (
+      {/* Burbujas base */}
+      {[...Array(30)].map((_, i) => (
         <motion.div
           key={`dot-${i}`}
-          className={`absolute rounded-full blur-[1.5px] ${i % 3 === 0 ? 'bg-[#E84A78]/40' : 'bg-[#D4AF37]/50'}`}
+          className={`absolute rounded-full blur-[2px] ${i % 3 === 0 ? 'bg-[#E84A78]/30' : 'bg-[#D4AF37]/30'}`}
           style={{ width: Math.random() * 12 + 4 + "px", height: Math.random() * 12 + 4 + "px", left: Math.random() * 100 + "%", top: "100%" }}
           animate={{ y: [0, -1200 - Math.random() * 500], x: Math.random() * 100 - 50, opacity: [0, 1, 0], scale: [1, 1.8, 1] }}
           transition={{ duration: Math.random() * 15 + 10, repeat: Infinity, ease: "linear", delay: Math.random() * 5 }}
         />
       ))}
-      {[...Array(15)].map((_, i) => (
-        <motion.div
-          key={`star-${i}`}
-          className="absolute"
-          style={{ left: Math.random() * 100 + "%", top: "100%" }}
-          animate={{ y: [0, -1200], x: Math.random() * 80 - 40, opacity: [0, 0.6, 0], rotate: [0, 360] }}
-          transition={{ duration: Math.random() * 15 + 12, repeat: Infinity, ease: "linear", delay: Math.random() * 5 }}
-        >
-          {i % 2 === 0 ? <Star className="w-4 h-4 text-[#E84A78]/60 fill-[#E84A78]/20" /> : <Sparkles className="w-5 h-5 text-[#D4AF37]/60" />}
-        </motion.div>
-      ))}
+      
+      {/* Vectores Temáticos Flotantes (Cactus, Herraduras, Estrellas) */}
+      {[...Array(25)].map((_, i) => {
+        const Icon = CowgirlIconsList[i % CowgirlIconsList.length];
+        const isPink = i % 2 === 0;
+        return (
+          <motion.div
+            key={`icon-${i}`}
+            className="absolute drop-shadow-md"
+            style={{ left: Math.random() * 100 + "%", top: "100%" }}
+            animate={{ y: [0, -1200], x: Math.random() * 100 - 50, opacity: [0, 0.4, 0], rotate: [0, Math.random() > 0.5 ? 360 : -360] }}
+            transition={{ duration: Math.random() * 18 + 15, repeat: Infinity, ease: "linear", delay: Math.random() * 8 }}
+          >
+            <Icon className={`w-6 h-6 md:w-8 md:h-8 ${isPink ? 'text-[#E84A78]' : 'text-[#D4AF37]'}`} />
+          </motion.div>
+        );
+      })}
     </div>
   );
 };
 
-// 2. TICKER TAPE ANIMADO (Diseño Premium)
+// 2. TICKER TAPE ANIMADO
 const TickerTape = () => (
   <div className="w-full bg-[#E84A78] text-[#FCF9F6] py-3 overflow-hidden flex border-y-4 border-[#3A2318]">
     <motion.div 
@@ -58,7 +72,7 @@ const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
     <motion.div exit={{ y: "-100%", opacity: 0 }} transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FCF9F6] overflow-hidden">
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.05] pointer-events-none"></div>
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1 }} className="text-center z-10 flex flex-col items-center px-6">
-        <Sparkles className="w-14 h-14 text-[#E84A78] mb-6 drop-shadow-md" strokeWidth={1.5} />
+        <Sparkles className="w-16 h-16 text-[#E84A78] mb-6 drop-shadow-lg" strokeWidth={1.5} />
         <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#3A2318] uppercase font-black mb-4">Ensilla y acompáñanos al</p>
         <h2 className="font-serif text-6xl md:text-8xl text-[#E84A78] mb-12 italic drop-shadow-sm font-bold">Yeehaw Party</h2>
         <button onClick={onOpen} className="bg-[#3A2318] text-[#FCF9F6] px-12 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#E84A78] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center gap-3">
@@ -118,9 +132,11 @@ const InvitationContent = () => {
                 <img src="/paula1.jpg" alt="Paula 1" className="w-full max-h-[75vh] object-cover block" />
             </motion.div>
             <div className="w-full md:w-1/2 flex flex-col gap-10">
-                <div className="text-center md:text-left">
-                    <h2 className="font-serif text-5xl md:text-6xl text-[#E84A78] italic mb-6 drop-shadow-md font-bold">¡Mi primera década!</h2>
-                    <p className="font-sans text-base text-[#3A2318]/90 leading-relaxed tracking-wide font-medium mb-4">
+                <div className="text-center md:text-left relative">
+                    {/* SVG DE CACTUS ESTÁTICO CORREGIDO */}
+                    <CactusIcon className="absolute -top-10 -left-10 w-16 h-16 text-[#E84A78]/20 rotate-12" />
+                    <h2 className="font-serif text-5xl md:text-6xl text-[#E84A78] italic mb-6 drop-shadow-md font-bold relative z-10">¡Mi primera década!</h2>
+                    <p className="font-sans text-base text-[#3A2318]/90 leading-relaxed tracking-wide font-medium mb-4 relative z-10">
                       Saddle up! El tiempo vuela y mi primera gran aventura apenas comienza. Cambiaremos el desierto por el agua para celebrar 10 años llenos de risas y momentos inolvidables.
                     </p>
                 </div>
@@ -128,7 +144,7 @@ const InvitationContent = () => {
                     <motion.div style={{ y: yParallaxFast }} className="shadow-xl z-10 border-[4px] border-white bg-white p-1 mt-12">
                         <img src="/paula2.jpg" alt="Paula 2" className="w-full h-auto object-cover aspect-[3/4] block" />
                     </motion.div>
-                    <div className="shadow-lg border-[4px] border-white bg-white p-1 mb-12">
+                    <div className="shadow-lg border-[4px] border-white bg-white p-1 mb-12 relative">
                         <img src="/paula3.jpg" alt="Paula 3" className="w-full h-auto object-cover aspect-[3/4] block" />
                     </div>
                 </div>
@@ -136,10 +152,11 @@ const InvitationContent = () => {
         </div>
       </section>
 
-      {/* GALERÍA 2: BENTO GRID PARA LAS 4 FOTOS NUEVAS */}
+      {/* GALERÍA 2: BENTO GRID */}
       <section className="py-12 px-6 md:px-12 max-w-7xl mx-auto mb-20 relative z-10">
-        <div className="text-center mb-12">
-            <Heart className="w-8 h-8 text-[#D4AF37] mx-auto mb-4" />
+        <div className="text-center mb-12 relative">
+            {/* SVG DE HERRADURA ESTÁTICA CORREGIDA */}
+            <HorseshoeIcon className="w-10 h-10 text-[#D4AF37] mx-auto mb-4" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <motion.div whileHover={{ scale: 1.02 }} className="md:col-span-2 relative shadow-2xl border-[6px] border-white bg-white p-2">

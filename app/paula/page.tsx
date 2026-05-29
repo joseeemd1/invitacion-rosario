@@ -5,12 +5,11 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Lenis from "lenis";
 import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sparkles, Star, Music, Heart } from "lucide-react";
 
-// 1. MOTOR DE VECTORES COWGIRL (Sombrero Actualizado a silueta Premium)
+// 1. MOTOR DE VECTORES COWGIRL
 const StarIcon = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
 const HorseshoeIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 22V9a7 7 0 0 1 14 0v13"/><path d="M9 22V11a3 3 0 0 1 6 0v11"/></svg>;
 const CactusIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 2v20"/><path d="M7 10v4a3 3 0 0 0 3 3h2"/><path d="M17 13v-3a3 3 0 0 0-3-3h-2"/></svg>;
 const SparkleVector = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.29 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.29L12 21l1.9-5.8a2 2 0 0 1 1.29-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.29L12 3Z"/></svg>;
-// Sombrero rediseñado
 const HatIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M22 15c0 2-4.5 3-10 3S2 17 2 15c0-1.5 2-2.5 4.5-3h11c2.5.5 4.5 1.5 4.5 3Z"/><path d="M6 12V8c0-3 2.5-5 5-5h2c2.5 0 5 2 5 5v4"/></svg>;
 
 const CowgirlIconsList = [HatIcon, StarIcon, HorseshoeIcon, CactusIcon, SparkleVector];
@@ -64,7 +63,7 @@ const TickerTape = () => (
   </div>
 );
 
-// 3. PORTADA DE APERTURA (Rediseño Estructural: Fotos Inyectadas, Nuevo Copy)
+// 3. PORTADA DE APERTURA (Fondo difuminado eliminado, halo protector añadido)
 const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
   return (
     <motion.div exit={{ y: "-100%", opacity: 0 }} transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FCF9F6] overflow-hidden">
@@ -77,7 +76,7 @@ const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
         transition={{ duration: 1, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
         src="/paula4.png"
         alt="Sticker Decorativo"
-        className="absolute left-[-20%] sm:left-4 md:left-16 top-16 md:top-32 w-56 md:w-64 h-auto object-contain drop-shadow-[0_20px_25px_rgba(232,74,120,0.25)] z-0 pointer-events-none"
+        className="absolute left-[-15%] sm:left-4 md:left-16 top-10 md:top-32 w-56 md:w-64 h-auto object-contain drop-shadow-[0_20px_25px_rgba(232,74,120,0.25)] z-0 pointer-events-none"
       />
       <motion.img
         initial={{ opacity: 0, x: 50, rotate: 15 }}
@@ -85,13 +84,13 @@ const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
         transition={{ duration: 1, y: { duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 } }}
         src="/paula5.png"
         alt="Sticker Decorativo"
-        className="absolute right-[-20%] sm:right-4 md:right-16 bottom-16 md:bottom-32 w-56 md:w-64 h-auto object-contain drop-shadow-[0_20px_25px_rgba(212,175,55,0.25)] z-0 pointer-events-none"
+        className="absolute right-[-15%] sm:right-4 md:right-16 bottom-10 md:bottom-32 w-56 md:w-64 h-auto object-contain drop-shadow-[0_20px_25px_rgba(212,175,55,0.25)] z-0 pointer-events-none"
       />
 
-      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1 }} className="text-center z-10 flex flex-col items-center px-8 py-12 bg-white/40 backdrop-blur-md rounded-[3rem] border-2 border-white shadow-2xl">
-        <HatIcon className="w-24 h-24 text-[#E84A78] mb-6 drop-shadow-xl fill-[#E84A78]/20" strokeWidth={1.5} />
-        <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#3A2318] uppercase font-black mb-4">Estás invitado a la mejor</p>
-        <h2 className="font-serif text-5xl md:text-7xl text-[#E84A78] mb-12 italic drop-shadow-sm font-bold leading-tight">Cowgirl<br/>Pool Party</h2>
+      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1 }} className="text-center z-10 flex flex-col items-center px-4 w-full relative">
+        <HatIcon className="w-24 h-24 text-[#E84A78] mb-6 drop-shadow-[0_0_15px_rgba(252,249,246,1)] fill-[#E84A78]/20" strokeWidth={1.5} />
+        <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#3A2318] uppercase font-black mb-4 drop-shadow-[0_0_10px_rgba(252,249,246,1)]">Estás invitado a la mejor</p>
+        <h2 className="font-serif text-5xl md:text-7xl text-[#E84A78] mb-12 italic font-bold leading-tight drop-shadow-[0_0_20px_rgba(252,249,246,1)]">Cowgirl<br/>Pool Party</h2>
         <button onClick={onOpen} className="bg-[#3A2318] text-[#FCF9F6] px-12 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#E84A78] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center gap-3">
           <Sparkles className="w-4 h-4" /> Ver Invitación VIP
         </button>

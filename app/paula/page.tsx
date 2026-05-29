@@ -9,13 +9,13 @@ import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sun, Waves, Sparkles } 
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {[...Array(70)].map((_, i) => (
+      {[...Array(60)].map((_, i) => (
         <motion.div
           key={i}
           className={`absolute rounded-full blur-[1px] ${i % 3 === 0 ? 'bg-[#1A4B5C]/60' : 'bg-[#D4AF37]/80'}`}
           style={{
-            width: Math.random() * 10 + 4 + "px",
-            height: Math.random() * 10 + 4 + "px",
+            width: Math.random() * 4 + 2 + "px",
+            height: Math.random() * 4 + 2 + "px",
             left: Math.random() * 100 + "%",
             top: "100%",
           }}
@@ -131,14 +131,15 @@ const InvitationContent = () => {
         </motion.div>
       </section>
 
-      {/* GALERÍA EDITORIAL TEXTO EXPANDIDO */}
+      {/* GALERÍA EDITORIAL TEXTO EXPANDIDO (FIX RESPONSIVO) */}
       <section ref={galleryRef} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-b border-[#1A4B5C]/10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
-            <motion.div style={{ y: yParallaxSlow }} className="md:col-span-7 relative w-full shadow-2xl border-4 border-white bg-white p-2">
-                <img src="/paula1.jpg" alt="Paula 1" className="w-full h-auto block" />
+        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+            <motion.div style={{ y: yParallaxSlow }} className="w-full md:w-1/2 relative shadow-2xl border-4 border-white bg-white p-2">
+                {/* Límite de altura (75vh) para evitar que fotos verticales rompan el layout */}
+                <img src="/paula1.jpg" alt="Paula 1" className="w-full max-h-[75vh] object-cover block" />
             </motion.div>
-            <div className="md:col-span-5 flex flex-col gap-10 md:gap-16">
-                <div className="text-center md:text-left py-4">
+            <div className="w-full md:w-1/2 flex flex-col gap-10">
+                <div className="text-center md:text-left">
                     <h2 className="font-serif text-4xl md:text-5xl text-[#D4AF37] italic mb-6 drop-shadow-md">¡Llegó a su primera década!</h2>
                     <p className="font-sans text-base text-[#1A4B5C]/90 leading-relaxed tracking-wide font-medium mb-4">
                       El tiempo vuela y mi primera gran aventura apenas comienza. Hoy celebro 10 años llenos de risas, juegos y momentos inolvidables rodeada de las personas que más quiero.
@@ -147,11 +148,14 @@ const InvitationContent = () => {
                       Acompáñame a disfrutar de una tarde mágica llena de sol, agua y diversión ilimitada. ¡Prepárate para crear recuerdos increíbles juntos en esta albercada de lujo!
                     </p>
                 </div>
-                <motion.div style={{ y: yParallaxFast }} className="relative w-full shadow-xl md:-ml-20 z-10 border-[6px] border-[#F0F5F7] bg-[#F0F5F7] p-1">
-                    <img src="/paula2.jpg" alt="Paula 2" className="w-full h-auto block" />
-                </motion.div>
-                <div className="relative w-[85%] ml-auto shadow-lg border-2 border-white bg-white p-1">
-                    <img src="/paula3.jpg" alt="Paula 3" className="w-full h-auto block" />
+                <div className="grid grid-cols-2 gap-4 relative mt-4">
+                    <motion.div style={{ y: yParallaxFast }} className="shadow-xl z-10 border-[4px] border-white bg-white p-1 mt-12">
+                        {/* Se fuerza el recorte estético 3/4 */}
+                        <img src="/paula2.jpg" alt="Paula 2" className="w-full h-auto object-cover aspect-[3/4] block" />
+                    </motion.div>
+                    <div className="shadow-lg border-[4px] border-white bg-white p-1 mb-12">
+                        <img src="/paula3.jpg" alt="Paula 3" className="w-full h-auto object-cover aspect-[3/4] block" />
+                    </div>
                 </div>
             </div>
         </div>

@@ -3,20 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
-import Unboxing from "../../components/Unboxing"; // Ajustado para subir dos niveles
-import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sun } from "lucide-react";
+import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sun, Waves, Sparkles } from "lucide-react";
 
-// Partículas estilo "Burbujas y Destellos de Resort"
+// 1. PARTÍCULAS MODO DIOS (Más grandes, más brillantes, más cantidad)
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {[...Array(40)].map((_, i) => (
+      {[...Array(70)].map((_, i) => (
         <motion.div
           key={i}
-          className={`absolute rounded-full blur-[1px] ${i % 3 === 0 ? 'bg-[#1A4B5C]/20' : 'bg-[#D4AF37]/30'}`}
+          className={`absolute rounded-full blur-[1px] ${i % 3 === 0 ? 'bg-[#1A4B5C]/60' : 'bg-[#D4AF37]/80'}`}
           style={{
-            width: Math.random() * 6 + 2 + "px",
-            height: Math.random() * 6 + 2 + "px",
+            width: Math.random() * 10 + 4 + "px",
+            height: Math.random() * 10 + 4 + "px",
             left: Math.random() * 100 + "%",
             top: "100%",
           }}
@@ -24,16 +23,50 @@ const Particles = () => {
             y: [0, -1200 - Math.random() * 500],
             x: Math.random() * 100 - 50,
             opacity: [0, 1, 0],
+            scale: [1, 1.5, 1]
           }}
           transition={{
-            duration: Math.random() * 15 + 10,
+            duration: Math.random() * 12 + 8,
             repeat: Infinity,
-            ease: "linear",
-            delay: Math.random() * 5,
+            ease: "easeInOut",
+            delay: Math.random() * 3,
           }}
         />
       ))}
     </div>
+  );
+};
+
+// 2. PORTADA DE APERTURA EXCLUSIVA PARA PAULA (Reemplaza el sello de la suegra)
+const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
+  return (
+    <motion.div 
+      exit={{ y: "-100%", opacity: 0 }}
+      transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F0F5F7] overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.05] pointer-events-none"></div>
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="text-center z-10 flex flex-col items-center px-6"
+      >
+        <Sparkles className="w-12 h-12 text-[#D4AF37] mb-6" strokeWidth={1.5} />
+        <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#1A4B5C] uppercase font-extrabold mb-4">
+          Estás invitado a celebrar
+        </p>
+        <h2 className="font-serif text-5xl md:text-7xl text-[#1A4B5C] mb-12 italic drop-shadow-sm">
+          Los 10 años de Paula
+        </h2>
+        <button
+          onClick={onOpen}
+          className="bg-[#D4AF37] text-white px-10 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#1A4B5C] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center gap-3"
+        >
+          Abrir Invitación
+        </button>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -57,31 +90,29 @@ const InvitationContent = () => {
     >
       <Particles />
 
-      {/* 1. HERO SECTION */}
+      {/* HERO SECTION */}
       <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center overflow-hidden border-b border-[#1A4B5C]/10 bg-[#F0F5F7]">
         <motion.div style={{ y: yHeroBg }} className="absolute inset-0 z-0">
-            {/* Foto de fondo, puedes usar una alberca desenfocada o foto de ella */}
             <img src="/background_paula.jpg" alt="Fondo Alberca" className="w-full h-full object-cover opacity-60 scale-110" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#F0F5F7]/30 via-[#F0F5F7]/80 to-[#F0F5F7]"></div>
         </motion.div>
 
         <motion.div style={{ opacity: opacityHeroText }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 1.2 }} className="z-10 relative mt-20">
-            <p className="font-sans text-xs md:text-sm tracking-[0.4em] text-[#1A4B5C] uppercase mb-8 font-extrabold drop-shadow-sm flex items-center justify-center gap-2">
-              <Sun className="w-4 h-4 text-[#D4AF37]" />
+            <p className="font-sans text-xs md:text-sm tracking-[0.4em] text-[#1A4B5C] uppercase mb-8 font-extrabold drop-shadow-md flex items-center justify-center gap-2">
+              <Sun className="w-5 h-5 text-[#D4AF37]" /> Pool Party Exclusiva
             </p>
-            <h1 className="font-serif text-7xl md:text-9xl italic text-[#1A4B5C] leading-tight mb-8 drop-shadow-sm">
+            <h1 className="font-serif text-7xl md:text-9xl italic text-[#1A4B5C] leading-tight mb-8 drop-shadow-xl">
               Paula
             </h1>
             <div className="flex items-center justify-center gap-6 mb-16">
-                <div className="h-px w-12 md:w-24 bg-[#D4AF37]/60"></div>
-                <p className="font-sans text-xl md:text-2xl tracking-[0.4em] text-[#1A4B5C] uppercase font-bold">
+                <div className="h-px w-12 md:w-24 bg-[#D4AF37]/80"></div>
+                <p className="font-sans text-xl md:text-2xl tracking-[0.4em] text-[#1A4B5C] uppercase font-black drop-shadow-sm">
                   MIS 10 AÑOS
                 </p>
-                <div className="h-px w-12 md:w-24 bg-[#D4AF37]/60"></div>
+                <div className="h-px w-12 md:w-24 bg-[#D4AF37]/80"></div>
             </div>
         </motion.div>
 
-        {/* INDICADOR DE SCROLL */}
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,12 +126,12 @@ const InvitationContent = () => {
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ChevronDown className="w-6 h-6 text-[#D4AF37]" strokeWidth={2.5} />
+            <ChevronDown className="w-6 h-6 text-[#D4AF37]" strokeWidth={3} />
           </motion.div>
         </motion.div>
       </section>
 
-      {/* 2. GALERÍA EDITORIAL INFANTIL/CHIC */}
+      {/* GALERÍA EDITORIAL TEXTO EXPANDIDO */}
       <section ref={galleryRef} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-b border-[#1A4B5C]/10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
             <motion.div style={{ y: yParallaxSlow }} className="md:col-span-7 relative w-full shadow-2xl border-4 border-white bg-white p-2">
@@ -108,8 +139,13 @@ const InvitationContent = () => {
             </motion.div>
             <div className="md:col-span-5 flex flex-col gap-10 md:gap-16">
                 <div className="text-center md:text-left py-4">
-                    <h2 className="font-serif text-4xl md:text-5xl text-[#D4AF37] italic mb-4">¡Llegó a su primera década!</h2>
-                    <p className="font-sans text-base text-[#1A4B5C]/80 leading-relaxed tracking-wide font-medium">Acompáñame a celebrar este día tan especial lleno de sol, agua y diversión increíble.</p>
+                    <h2 className="font-serif text-4xl md:text-5xl text-[#D4AF37] italic mb-6 drop-shadow-md">¡Llegó a su primera década!</h2>
+                    <p className="font-sans text-base text-[#1A4B5C]/90 leading-relaxed tracking-wide font-medium mb-4">
+                      El tiempo vuela y mi primera gran aventura apenas comienza. Hoy celebro 10 años llenos de risas, juegos y momentos inolvidables rodeada de las personas que más quiero.
+                    </p>
+                    <p className="font-sans text-base text-[#1A4B5C]/90 leading-relaxed tracking-wide font-medium">
+                      Acompáñame a disfrutar de una tarde mágica llena de sol, agua y diversión ilimitada. ¡Prepárate para crear recuerdos increíbles juntos en esta albercada de lujo!
+                    </p>
                 </div>
                 <motion.div style={{ y: yParallaxFast }} className="relative w-full shadow-xl md:-ml-20 z-10 border-[6px] border-[#F0F5F7] bg-[#F0F5F7] p-1">
                     <img src="/paula2.jpg" alt="Paula 2" className="w-full h-auto block" />
@@ -121,60 +157,71 @@ const InvitationContent = () => {
         </div>
       </section>
 
-      {/* 3. DÓNDE Y CUÁNDO (CON CÓDIGO DE VESTIMENTA) */}
+      {/* DÓNDE Y CUÁNDO (CON FOTO DEL LUGAR Y TÍTULO DALEDÁ) */}
       <section className="py-32 px-6 mx-auto max-w-5xl text-center border-b border-[#1A4B5C]/10 bg-white/40 relative">
-         <h2 className="font-serif text-5xl md:text-6xl text-[#1A4B5C] italic mb-16">Dónde & Cuándo</h2>
+         <h2 className="font-serif text-5xl md:text-6xl text-[#1A4B5C] italic mb-16 drop-shadow-sm">Dónde & Cuándo</h2>
          
          <div className="grid gap-8 md:grid-cols-2 relative z-10">
-            <div className="flex flex-col items-center bg-white/80 backdrop-blur-sm p-12 border border-[#1A4B5C]/5 shadow-sm rounded-sm">
+            {/* TARJETA FECHA */}
+            <div className="flex flex-col items-center bg-white/90 backdrop-blur-md p-12 border border-[#1A4B5C]/10 shadow-xl rounded-sm">
               <Clock className="h-12 w-12 text-[#D4AF37] mb-6" strokeWidth={1.5}/>
-              <h3 className="font-serif text-3xl text-[#1A4B5C] mb-2">Domingo 14 de Junio</h3>
-              <p className="font-sans text-xl text-[#1A4B5C]/90 font-bold mb-1">5:00 PM - 9:00 PM</p>
+              <h3 className="font-serif text-3xl text-[#1A4B5C] mb-2 font-bold">Domingo 14 de Junio</h3>
+              <p className="font-sans text-xl text-[#1A4B5C]/90 font-black mb-1">5:00 PM - 9:00 PM</p>
             </div>
             
-            <a href="https://maps.app.goo.gl/x3QoKfdBVvnEuYYS6" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center bg-white/80 backdrop-blur-sm p-12 border border-[#1A4B5C]/5 shadow-sm rounded-sm hover:shadow-lg transition-all duration-300 cursor-pointer group flex-grow">
-              <MapPin className="h-14 w-14 text-[#D4AF37] mb-6 group-hover:scale-110 transition-transform" strokeWidth={1.5}/>
-              <h3 className="font-serif text-3xl text-[#1A4B5C] mb-2">Ubicación</h3>
-              <p className="font-sans text-lg text-[#1A4B5C]/90 font-bold mb-1">Avenida Doce #56</p>
-              <p className="text-[10px] md:text-xs text-[#1A4B5C]/60 font-sans tracking-widest uppercase leading-relaxed mt-2 max-w-[250px]">
-                Entre calle uno y dos<br/>Col. Bugambilia, Hermosillo, Sonora.
-              </p>
-              <span className="mt-6 text-[#D4AF37] text-xs md:text-sm tracking-widest uppercase font-black border-b border-[#D4AF37]/30 pb-1 group-hover:border-[#D4AF37] transition-colors">Abrir Google Maps</span>
+            {/* TARJETA UBICACIÓN CON FOTO */}
+            <a href="https://maps.app.goo.gl/x3QoKfdBVvnEuYYS6" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center bg-white/90 backdrop-blur-md border border-[#1A4B5C]/10 shadow-xl rounded-sm hover:shadow-2xl transition-all duration-300 cursor-pointer group flex-grow overflow-hidden relative">
+              <div className="w-full h-40 overflow-hidden relative">
+                <img src="/daleda.jpg" alt="Daledá Local" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+              </div>
+              
+              <div className="p-8 w-full flex flex-col items-center -mt-10 relative z-10">
+                <div className="bg-white p-3 rounded-full shadow-md mb-4 group-hover:-translate-y-2 transition-transform duration-300">
+                  <MapPin className="h-8 w-8 text-[#D4AF37]" strokeWidth={2}/>
+                </div>
+                <h3 className="font-serif text-4xl text-[#1A4B5C] mb-2 font-bold drop-shadow-sm">Daledá</h3>
+                <p className="font-sans text-lg text-[#1A4B5C] font-black mb-1">Avenida Doce #56</p>
+                <p className="text-[10px] md:text-xs text-[#1A4B5C]/70 font-sans tracking-widest uppercase leading-relaxed mt-2 max-w-[250px] font-bold">
+                  Entre calle uno y dos<br/>Col. Bugambilia, Hermosillo, Sonora.
+                </p>
+                <span className="mt-6 text-[#D4AF37] text-xs md:text-sm tracking-widest uppercase font-black border-b-2 border-[#D4AF37]/30 pb-1 group-hover:border-[#D4AF37] transition-colors">Abrir Google Maps</span>
+              </div>
             </a>
          </div>
 
          {/* DRESS CODE ALBERCADA */}
-         <div className="mt-8 bg-[#1A4B5C] text-white p-10 rounded-sm shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/10 rounded-full blur-2xl translate-x-10 -translate-y-10"></div>
-            <Sun className="mx-auto h-10 w-10 text-[#D4AF37] mb-4" strokeWidth={1.5} />
-            <h3 className="font-serif text-3xl italic mb-3">No olvides...</h3>
-            <p className="font-sans text-sm md:text-base font-bold tracking-widest uppercase text-white/90">
+         <div className="mt-12 bg-[#1A4B5C] text-white p-12 rounded-sm shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#D4AF37]/20 rounded-full blur-3xl translate-x-10 -translate-y-10"></div>
+            <Sun className="mx-auto h-12 w-12 text-[#D4AF37] mb-4" strokeWidth={2} />
+            <h3 className="font-serif text-4xl italic mb-4 drop-shadow-md">No olvides...</h3>
+            <p className="font-sans text-sm md:text-lg font-black tracking-widest uppercase text-white drop-shadow-sm">
               Traer tu bikini y traje de baño
             </p>
          </div>
 
          <div className="flex justify-center mt-12 relative z-10">
-             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pool+Party+10+A%C3%B1os+de+Paula&dates=20260614T170000/20260614T210000&details=Traer+bikini+y+traje+de+ba%C3%B1o!&location=Avenida+Doce+%2356,+Col.+Bugambilia,+Hermosillo&sf=true&output=xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#D4AF37] text-white px-8 py-4 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#1A4B5C] transition-colors shadow-md active:scale-95 group">
-                <CalendarDays className="h-4 w-4 text-white group-hover:text-[#D4AF37] transition-colors" />
+             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pool+Party+10+A%C3%B1os+de+Paula&dates=20260614T170000/20260614T210000&details=Traer+bikini+y+traje+de+ba%C3%B1o!&location=Daled%C3%A1,+Avenida+Doce+%2356,+Col.+Bugambilia,+Hermosillo&sf=true&output=xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#D4AF37] text-white px-8 py-4 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#1A4B5C] transition-all duration-300 shadow-xl active:scale-95 group">
+                <CalendarDays className="h-5 w-5 text-white group-hover:text-[#D4AF37] transition-colors" />
                 Agendar Fiesta
              </a>
          </div>
       </section>
 
-      {/* 4. REGALOS */}
-      <section className="py-24 px-6 text-center bg-[#F0F5F7] relative overflow-hidden">
+      {/* REGALOS */}
+      <section className="py-32 px-6 text-center bg-[#F0F5F7] relative overflow-hidden">
         <div className="max-w-2xl mx-auto relative z-10">
-            <Gift className="mx-auto h-14 w-14 text-[#D4AF37] mb-6" strokeWidth={1.5} />
-            <h2 className="font-serif text-4xl md:text-5xl text-[#1A4B5C] italic mb-6">Regalos</h2>
-            <p className="mb-0 font-sans text-sm md:text-base text-[#1A4B5C]/90 font-medium leading-relaxed tracking-wide max-w-lg mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-10 rounded-sm shadow-sm border border-[#1A4B5C]/10">
-              Tu presencia es mi mayor alegría. Si deseas darme un obsequio, puedes traer un regalo sorpresa o lluvia de sobres. ¡Lo que tú prefieras! 💌🎁
+            <Gift className="mx-auto h-16 w-16 text-[#D4AF37] mb-8 drop-shadow-sm" strokeWidth={1.5} />
+            <h2 className="font-serif text-5xl md:text-6xl text-[#1A4B5C] italic mb-8 drop-shadow-sm">Regalos</h2>
+            <p className="mb-0 font-sans text-base md:text-lg text-[#1A4B5C] font-semibold leading-relaxed tracking-wide max-w-lg mx-auto bg-white/90 backdrop-blur-md p-10 md:p-12 rounded-sm shadow-xl border border-[#1A4B5C]/10">
+              Tu presencia es mi mayor alegría. Si deseas darme un obsequio, puedes traer un regalo sorpresa o participar en la lluvia de sobres. ¡Lo que tú prefieras! 💌 🎁
             </p>
         </div>
       </section>
 
-      <footer className="py-12 text-center border-t border-[#1A4B5C]/10 bg-white">
-          <p className="font-serif text-3xl text-[#1A4B5C]/30 italic">Paula</p>
-          <p className="font-sans text-[8px] uppercase tracking-widest text-[#1A4B5C]/20 mt-2">10 Años</p>
+      <footer className="py-16 text-center border-t border-[#1A4B5C]/10 bg-white">
+          <p className="font-serif text-4xl text-[#1A4B5C]/40 italic font-bold">Paula</p>
+          <p className="font-sans text-[10px] uppercase tracking-widest text-[#1A4B5C]/30 mt-3 font-black">10 Años</p>
       </footer>
     </motion.div>
   );
@@ -186,8 +233,8 @@ export default function Home() {
 
   useEffect(() => {
     if (!audioRef.current) {
-      // Te sugiero cambiar este MP3 por una canción más "infantil/verano" en tu carpeta public
-      audioRef.current = new Audio("/cancion.mp3"); 
+      // 3. REPRODUCTOR APUNTA A LA CANCIÓN DE PAULA
+      audioRef.current = new Audio("/cancion-paula.mp3"); 
       audioRef.current.loop = true;
     }
 
@@ -225,11 +272,15 @@ export default function Home() {
   }, [hasOpened]);
 
   return (
-    <main className="relative bg-[#F0F5F7] text-[#1A4B5C] font-sans overflow-hidden">
+    <main className="relative bg-[#F0F5F7] text-[#1A4B5C] font-sans overflow-hidden min-h-screen">
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.05] pointer-events-none z-50"></div>
       
-      {/* Recuerda que el Unboxing ahora usa los colores originales, si quieres cambiar el color del sobre, tendrías que pasarle props o ajustar el componente base */}
-      <Unboxing onOpen={() => setHasOpened(true)} audioRef={audioRef} />
+      <AnimatePresence>
+        {!hasOpened && <PaulaIntro onOpen={() => {
+          setHasOpened(true);
+          audioRef.current?.play().catch(() => {});
+        }} />}
+      </AnimatePresence>
 
       <AnimatePresence>
         {hasOpened && <InvitationContent />}

@@ -5,19 +5,20 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Lenis from "lenis";
 import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sparkles, Star, Music, Heart } from "lucide-react";
 
-// 1. MOTOR DE VECTORES COWGIRL (Componentes individuales corregidos)
+// 1. MOTOR DE VECTORES COWGIRL (Iconos de alta costura, incluyendo el Sombrero)
 const StarIcon = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
 const HorseshoeIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 22V9a7 7 0 0 1 14 0v13"/><path d="M9 22V11a3 3 0 0 1 6 0v11"/></svg>;
 const CactusIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 2v20"/><path d="M7 10v4a3 3 0 0 0 3 3h2"/><path d="M17 13v-3a3 3 0 0 0-3-3h-2"/></svg>;
 const SparkleVector = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.29 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.29L12 21l1.9-5.8a2 2 0 0 1 1.29-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.29L12 3Z"/></svg>;
+const HatIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 4c-2.5 0-4.5 2-4.5 5v3.2c-3.5.5-6 1.3-6 2.8 0 1.6 4.7 3 10.5 3s10.5-1.4 10.5-3c0-1.5-2.5-2.3-6-2.8V9c0-3-2-5-4.5-5z"/><path d="M7.5 9h9"/></svg>;
 
-const CowgirlIconsList = [StarIcon, HorseshoeIcon, CactusIcon, SparkleVector];
+const CowgirlIconsList = [HatIcon, StarIcon, HorseshoeIcon, CactusIcon, SparkleVector];
 
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       {/* Burbujas base */}
-      {[...Array(30)].map((_, i) => (
+      {[...Array(25)].map((_, i) => (
         <motion.div
           key={`dot-${i}`}
           className={`absolute rounded-full blur-[2px] ${i % 3 === 0 ? 'bg-[#E84A78]/30' : 'bg-[#D4AF37]/30'}`}
@@ -27,19 +28,20 @@ const Particles = () => {
         />
       ))}
       
-      {/* Vectores Temáticos Flotantes (Cactus, Herraduras, Estrellas) */}
-      {[...Array(25)].map((_, i) => {
+      {/* Vectores Temáticos Flotantes: Tamaño maximizado y Opacidad al 85% */}
+      {[...Array(30)].map((_, i) => {
         const Icon = CowgirlIconsList[i % CowgirlIconsList.length];
         const isPink = i % 2 === 0;
         return (
           <motion.div
             key={`icon-${i}`}
-            className="absolute drop-shadow-md"
+            className="absolute drop-shadow-xl"
             style={{ left: Math.random() * 100 + "%", top: "100%" }}
-            animate={{ y: [0, -1200], x: Math.random() * 100 - 50, opacity: [0, 0.4, 0], rotate: [0, Math.random() > 0.5 ? 360 : -360] }}
+            animate={{ y: [0, -1200], x: Math.random() * 100 - 50, opacity: [0, 0.85, 0], rotate: [0, Math.random() > 0.5 ? 360 : -360] }}
             transition={{ duration: Math.random() * 18 + 15, repeat: Infinity, ease: "linear", delay: Math.random() * 8 }}
           >
-            <Icon className={`w-6 h-6 md:w-8 md:h-8 ${isPink ? 'text-[#E84A78]' : 'text-[#D4AF37]'}`} />
+            {/* Tamaños aumentados de w-6 a w-10/w-12 para garantizar impacto visual */}
+            <Icon className={`w-10 h-10 md:w-14 md:h-14 ${isPink ? 'text-[#E84A78] fill-[#E84A78]/20' : 'text-[#D4AF37] fill-[#D4AF37]/20'}`} />
           </motion.div>
         );
       })}
@@ -72,7 +74,7 @@ const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
     <motion.div exit={{ y: "-100%", opacity: 0 }} transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FCF9F6] overflow-hidden">
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.05] pointer-events-none"></div>
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1 }} className="text-center z-10 flex flex-col items-center px-6">
-        <Sparkles className="w-16 h-16 text-[#E84A78] mb-6 drop-shadow-lg" strokeWidth={1.5} />
+        <HatIcon className="w-20 h-20 text-[#E84A78] mb-6 drop-shadow-xl fill-[#E84A78]/20" strokeWidth={1.5} />
         <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#3A2318] uppercase font-black mb-4">Ensilla y acompáñanos al</p>
         <h2 className="font-serif text-6xl md:text-8xl text-[#E84A78] mb-12 italic drop-shadow-sm font-bold">Yeehaw Party</h2>
         <button onClick={onOpen} className="bg-[#3A2318] text-[#FCF9F6] px-12 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#E84A78] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center gap-3">
@@ -133,8 +135,7 @@ const InvitationContent = () => {
             </motion.div>
             <div className="w-full md:w-1/2 flex flex-col gap-10">
                 <div className="text-center md:text-left relative">
-                    {/* SVG DE CACTUS ESTÁTICO CORREGIDO */}
-                    <CactusIcon className="absolute -top-10 -left-10 w-16 h-16 text-[#E84A78]/20 rotate-12" />
+                    <CactusIcon className="absolute -top-10 -left-10 w-20 h-20 text-[#E84A78]/40 rotate-12 drop-shadow-sm" />
                     <h2 className="font-serif text-5xl md:text-6xl text-[#E84A78] italic mb-6 drop-shadow-md font-bold relative z-10">¡Mi primera década!</h2>
                     <p className="font-sans text-base text-[#3A2318]/90 leading-relaxed tracking-wide font-medium mb-4 relative z-10">
                       Saddle up! El tiempo vuela y mi primera gran aventura apenas comienza. Cambiaremos el desierto por el agua para celebrar 10 años llenos de risas y momentos inolvidables.
@@ -155,8 +156,7 @@ const InvitationContent = () => {
       {/* GALERÍA 2: BENTO GRID */}
       <section className="py-12 px-6 md:px-12 max-w-7xl mx-auto mb-20 relative z-10">
         <div className="text-center mb-12 relative">
-            {/* SVG DE HERRADURA ESTÁTICA CORREGIDA */}
-            <HorseshoeIcon className="w-10 h-10 text-[#D4AF37] mx-auto mb-4" />
+            <HorseshoeIcon className="w-12 h-12 text-[#D4AF37] mx-auto mb-4 drop-shadow-md" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <motion.div whileHover={{ scale: 1.02 }} className="md:col-span-2 relative shadow-2xl border-[6px] border-white bg-white p-2">
@@ -208,7 +208,7 @@ const InvitationContent = () => {
          <div className="mt-12 bg-[#E84A78] text-white p-12 rounded-xl shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#D4AF37]/30 rounded-full blur-3xl translate-x-10 -translate-y-10"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#3A2318]/20 rounded-full blur-2xl -translate-x-10 translate-y-10"></div>
-            <Music className="mx-auto h-12 w-12 text-[#FCF9F6] mb-4 drop-shadow-md" strokeWidth={2.5} />
+            <HatIcon className="mx-auto h-16 w-16 text-[#FCF9F6] mb-4 drop-shadow-md fill-[#FCF9F6]/20" strokeWidth={1.5} />
             <h3 className="font-serif text-4xl md:text-5xl italic mb-4 drop-shadow-md font-bold text-[#FCF9F6]">Código de Vestimenta</h3>
             <p className="font-sans text-sm md:text-lg font-black tracking-widest uppercase text-white drop-shadow-sm">Traje de baño y tu mejor actitud Cowgirl</p>
          </div>

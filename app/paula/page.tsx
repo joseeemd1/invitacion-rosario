@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Lenis from "lenis";
 import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sparkles, Star, Music, Heart } from "lucide-react";
 
-// 1. MOTOR DE VECTORES COWGIRL (Iconos de alta costura, incluyendo el Sombrero)
+// 1. MOTOR DE VECTORES COWGIRL
 const StarIcon = (props: any) => <svg viewBox="0 0 24 24" fill="currentColor" {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
 const HorseshoeIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 22V9a7 7 0 0 1 14 0v13"/><path d="M9 22V11a3 3 0 0 1 6 0v11"/></svg>;
 const CactusIcon = (props: any) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 2v20"/><path d="M7 10v4a3 3 0 0 0 3 3h2"/><path d="M17 13v-3a3 3 0 0 0-3-3h-2"/></svg>;
@@ -17,7 +17,6 @@ const CowgirlIconsList = [HatIcon, StarIcon, HorseshoeIcon, CactusIcon, SparkleV
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {/* Burbujas base */}
       {[...Array(25)].map((_, i) => (
         <motion.div
           key={`dot-${i}`}
@@ -27,8 +26,6 @@ const Particles = () => {
           transition={{ duration: Math.random() * 15 + 10, repeat: Infinity, ease: "linear", delay: Math.random() * 5 }}
         />
       ))}
-      
-      {/* Vectores Temáticos Flotantes: Tamaño maximizado y Opacidad al 85% */}
       {[...Array(30)].map((_, i) => {
         const Icon = CowgirlIconsList[i % CowgirlIconsList.length];
         const isPink = i % 2 === 0;
@@ -40,7 +37,6 @@ const Particles = () => {
             animate={{ y: [0, -1200], x: Math.random() * 100 - 50, opacity: [0, 0.85, 0], rotate: [0, Math.random() > 0.5 ? 360 : -360] }}
             transition={{ duration: Math.random() * 18 + 15, repeat: Infinity, ease: "linear", delay: Math.random() * 8 }}
           >
-            {/* Tamaños aumentados de w-6 a w-10/w-12 para garantizar impacto visual */}
             <Icon className={`w-10 h-10 md:w-14 md:h-14 ${isPink ? 'text-[#E84A78] fill-[#E84A78]/20' : 'text-[#D4AF37] fill-[#D4AF37]/20'}`} />
           </motion.div>
         );
@@ -49,7 +45,6 @@ const Particles = () => {
   );
 };
 
-// 2. TICKER TAPE ANIMADO
 const TickerTape = () => (
   <div className="w-full bg-[#E84A78] text-[#FCF9F6] py-3 overflow-hidden flex border-y-4 border-[#3A2318]">
     <motion.div 
@@ -68,7 +63,6 @@ const TickerTape = () => (
   </div>
 );
 
-// 3. PORTADA DE APERTURA
 const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
   return (
     <motion.div exit={{ y: "-100%", opacity: 0 }} transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FCF9F6] overflow-hidden">
@@ -100,7 +94,6 @@ const InvitationContent = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5 }} className="relative z-10 w-full">
       <Particles />
 
-      {/* HERO SECTION */}
       <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center overflow-hidden bg-[#FCF9F6]">
         <motion.div style={{ y: yHeroBg }} className="absolute inset-0 z-0">
             <img src="/background_paula.jpg" alt="Fondo" className="w-full h-full object-cover opacity-30 scale-110 grayscale-[30%] sepia-[10%]" />
@@ -127,11 +120,12 @@ const InvitationContent = () => {
 
       <TickerTape />
 
-      {/* GALERÍA 1 (3 FOTOS) */}
+      {/* GALERÍA 1 (STICKERS EDITORIALES) */}
       <section ref={galleryRef} className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-            <motion.div style={{ y: yParallaxSlow }} className="w-full md:w-1/2 relative shadow-2xl border-[6px] border-white bg-white p-2">
-                <img src="/paula1.jpg" alt="Paula 1" className="w-full max-h-[75vh] object-cover block" />
+            <motion.div style={{ y: yParallaxSlow }} className="w-full md:w-1/2 relative flex justify-center items-center">
+                {/* PNG inyectado, sin bordes de contenedor, sombra proyectada realista */}
+                <img src="/paula1.png" alt="Paula Sticker 1" className="w-full max-h-[75vh] object-contain drop-shadow-[0_20px_25px_rgba(232,74,120,0.2)] block" />
             </motion.div>
             <div className="w-full md:w-1/2 flex flex-col gap-10">
                 <div className="text-center md:text-left relative">
@@ -142,34 +136,34 @@ const InvitationContent = () => {
                     </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 relative mt-4">
-                    <motion.div style={{ y: yParallaxFast }} className="shadow-xl z-10 border-[4px] border-white bg-white p-1 mt-12">
-                        <img src="/paula2.jpg" alt="Paula 2" className="w-full h-auto object-cover aspect-[3/4] block" />
+                    <motion.div style={{ y: yParallaxFast }} whileHover={{ scale: 1.05, rotate: -2 }} className="relative z-10 flex justify-center items-center mt-12 cursor-pointer transition-all duration-300">
+                        <img src="/paula2.png" alt="Paula Sticker 2" className="w-full h-auto max-h-[400px] object-contain drop-shadow-[0_15px_15px_rgba(212,175,55,0.2)] block" />
                     </motion.div>
-                    <div className="shadow-lg border-[4px] border-white bg-white p-1 mb-12 relative">
-                        <img src="/paula3.jpg" alt="Paula 3" className="w-full h-auto object-cover aspect-[3/4] block" />
-                    </div>
+                    <motion.div whileHover={{ scale: 1.05, rotate: 2 }} className="relative flex justify-center items-center mb-12 cursor-pointer transition-all duration-300">
+                        <img src="/paula3.png" alt="Paula Sticker 3" className="w-full h-auto max-h-[400px] object-contain drop-shadow-[0_15px_15px_rgba(232,74,120,0.2)] block" />
+                    </motion.div>
                 </div>
             </div>
         </div>
       </section>
 
-      {/* GALERÍA 2: BENTO GRID */}
+      {/* GALERÍA 2: STICKER GRID */}
       <section className="py-12 px-6 md:px-12 max-w-7xl mx-auto mb-20 relative z-10">
         <div className="text-center mb-12 relative">
             <HorseshoeIcon className="w-12 h-12 text-[#D4AF37] mx-auto mb-4 drop-shadow-md" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <motion.div whileHover={{ scale: 1.02 }} className="md:col-span-2 relative shadow-2xl border-[6px] border-white bg-white p-2">
-                <img src="/paula4.jpg" alt="Paula 4" className="w-full h-[300px] md:h-[450px] object-cover block" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div whileHover={{ scale: 1.05, rotate: 1 }} className="md:col-span-2 relative flex justify-center items-center cursor-pointer transition-all duration-300">
+                <img src="/paula4.png" alt="Paula Sticker 4" className="w-full h-auto max-h-[450px] object-contain drop-shadow-[0_20px_25px_rgba(232,74,120,0.15)] block" />
             </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} className="relative shadow-xl border-[6px] border-white bg-white p-2">
-                <img src="/paula5.jpg" alt="Paula 5" className="w-full h-[300px] md:h-[450px] object-cover block" />
+            <motion.div whileHover={{ scale: 1.05, rotate: -2 }} className="relative flex justify-center items-center cursor-pointer transition-all duration-300">
+                <img src="/paula5.png" alt="Paula Sticker 5" className="w-full h-auto max-h-[450px] object-contain drop-shadow-[0_20px_25px_rgba(212,175,55,0.15)] block" />
             </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} className="relative shadow-xl border-[6px] border-white bg-white p-2">
-                <img src="/paula6.jpg" alt="Paula 6" className="w-full h-[300px] md:h-[450px] object-cover block" />
+            <motion.div whileHover={{ scale: 1.05, rotate: 2 }} className="relative flex justify-center items-center cursor-pointer transition-all duration-300">
+                <img src="/paula6.png" alt="Paula Sticker 6" className="w-full h-auto max-h-[450px] object-contain drop-shadow-[0_20px_25px_rgba(232,74,120,0.15)] block" />
             </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} className="md:col-span-2 relative shadow-2xl border-[6px] border-white bg-white p-2">
-                <img src="/paula7.jpg" alt="Paula 7" className="w-full h-[300px] md:h-[450px] object-cover object-top block" />
+            <motion.div whileHover={{ scale: 1.05, rotate: -1 }} className="md:col-span-2 relative flex justify-center items-center cursor-pointer transition-all duration-300">
+                <img src="/paula7.png" alt="Paula Sticker 7" className="w-full h-auto max-h-[450px] object-contain drop-shadow-[0_20px_25px_rgba(212,175,55,0.15)] block" />
             </motion.div>
         </div>
       </section>

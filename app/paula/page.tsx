@@ -246,7 +246,7 @@ export default function Home() {
           audioRef.current?.play().catch(() => {});
         }
       }
-    };
+    };  
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 

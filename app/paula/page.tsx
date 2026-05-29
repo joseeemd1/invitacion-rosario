@@ -3,19 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
-import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sun, Star, Sparkles } from "lucide-react";
+import { Clock, MapPin, CalendarDays, Gift, ChevronDown, Sparkles, Star, Music } from "lucide-react";
 
-// 1. PARTÍCULAS: Turquesa agua y Oro rodeo
+// 1. PARTÍCULAS: Rosa Vibrante y Oro Disco
 const Particles = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       {[...Array(70)].map((_, i) => (
         <motion.div
           key={i}
-          className={`absolute rounded-full blur-[1px] ${i % 3 === 0 ? 'bg-[#4DB6AC]/40' : 'bg-[#C5A059]/60'}`}
+          className={`absolute rounded-full blur-[1.5px] ${i % 3 === 0 ? 'bg-[#E84A78]/50' : 'bg-[#D4AF37]/60'}`}
           style={{
-            width: Math.random() * 10 + 4 + "px",
-            height: Math.random() * 10 + 4 + "px",
+            width: Math.random() * 12 + 4 + "px",
+            height: Math.random() * 12 + 4 + "px",
             left: Math.random() * 100 + "%",
             top: "100%",
           }}
@@ -23,7 +23,8 @@ const Particles = () => {
             y: [0, -1200 - Math.random() * 500],
             x: Math.random() * 100 - 50,
             opacity: [0, 1, 0],
-            scale: [1, 1.5, 1]
+            scale: [1, 1.8, 1],
+            rotate: [0, 180]
           }}
           transition={{
             duration: Math.random() * 12 + 8,
@@ -37,13 +38,13 @@ const Particles = () => {
   );
 };
 
-// 2. PORTADA DE APERTURA: Tonos Cuero y Arena
+// 2. PORTADA DE APERTURA: Yeehaw Luxury
 const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
   return (
     <motion.div 
       exit={{ y: "-100%", opacity: 0 }}
       transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F7F4EB] overflow-hidden"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FCF9F6] overflow-hidden"
     >
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.05] pointer-events-none"></div>
       <motion.div 
@@ -52,18 +53,18 @@ const PaulaIntro = ({ onOpen }: { onOpen: () => void }) => {
         transition={{ duration: 1 }}
         className="text-center z-10 flex flex-col items-center px-6"
       >
-        <Star className="w-12 h-12 text-[#C5A059] mb-6 fill-[#C5A059]/20" strokeWidth={1.5} />
-        <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#3E2723] uppercase font-extrabold mb-4">
-          Estás invitado a mi primer
+        <Sparkles className="w-14 h-14 text-[#E84A78] mb-6 drop-shadow-md" strokeWidth={1.5} />
+        <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] text-[#3A2318] uppercase font-black mb-4">
+          Ensilla y acompáñanos al
         </p>
-        <h2 className="font-serif text-5xl md:text-7xl text-[#3E2723] mb-12 italic drop-shadow-sm">
-          Rodeo Acuático
+        <h2 className="font-serif text-6xl md:text-8xl text-[#E84A78] mb-12 italic drop-shadow-sm font-bold">
+          Yeehaw Party
         </h2>
         <button
           onClick={onOpen}
-          className="bg-[#3E2723] text-[#F7F4EB] px-10 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#C5A059] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center gap-3"
+          className="bg-[#3A2318] text-[#FCF9F6] px-12 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#E84A78] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center gap-3"
         >
-          Abrir Invitación
+          <Star className="w-4 h-4" /> Entrar al Rodeo
         </button>
       </motion.div>
     </motion.div>
@@ -91,25 +92,25 @@ const InvitationContent = () => {
       <Particles />
 
       {/* HERO SECTION */}
-      <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center overflow-hidden border-b border-[#3E2723]/10 bg-[#F7F4EB]">
+      <section ref={heroRef} className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center overflow-hidden border-b border-[#E84A78]/20 bg-[#FCF9F6]">
         <motion.div style={{ y: yHeroBg }} className="absolute inset-0 z-0">
-            <img src="/background_paula.jpg" alt="Fondo Cowgirl Alberca" className="w-full h-full object-cover opacity-50 scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#F7F4EB]/30 via-[#F7F4EB]/80 to-[#F7F4EB]"></div>
+            <img src="/background_paula.jpg" alt="Fondo Cowgirl Alberca" className="w-full h-full object-cover opacity-30 scale-110 grayscale-[30%] sepia-[10%]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#FCF9F6]/50 via-[#FCF9F6]/80 to-[#FCF9F6]"></div>
         </motion.div>
 
         <motion.div style={{ opacity: opacityHeroText }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 1.2 }} className="z-10 relative mt-20">
-            <p className="font-sans text-xs md:text-sm tracking-[0.4em] text-[#3E2723] uppercase mb-8 font-extrabold drop-shadow-md flex items-center justify-center gap-2">
-              <Star className="w-5 h-5 text-[#C5A059]" /> Cowgirl Pool Party
+            <p className="font-sans text-xs md:text-sm tracking-[0.4em] text-[#E84A78] uppercase mb-8 font-black drop-shadow-md flex items-center justify-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#D4AF37]" /> Cowgirl Pool Party
             </p>
-            <h1 className="font-serif text-7xl md:text-9xl italic text-[#3E2723] leading-tight mb-8 drop-shadow-xl">
+            <h1 className="font-serif text-7xl md:text-9xl italic text-[#3A2318] leading-tight mb-8 drop-shadow-xl font-bold">
               Paula
             </h1>
             <div className="flex items-center justify-center gap-6 mb-16">
-                <div className="h-px w-12 md:w-24 bg-[#C5A059]/80"></div>
-                <p className="font-sans text-xl md:text-2xl tracking-[0.4em] text-[#3E2723] uppercase font-black drop-shadow-sm">
+                <div className="h-px w-12 md:w-24 bg-[#E84A78]/80"></div>
+                <p className="font-sans text-xl md:text-2xl tracking-[0.4em] text-[#3A2318] uppercase font-black drop-shadow-sm">
                   MIS 10 AÑOS
                 </p>
-                <div className="h-px w-12 md:w-24 bg-[#C5A059]/80"></div>
+                <div className="h-px w-12 md:w-24 bg-[#E84A78]/80"></div>
             </div>
         </motion.div>
 
@@ -119,32 +120,32 @@ const InvitationContent = () => {
           transition={{ delay: 1.2, duration: 1 }}
           className="absolute bottom-20 md:bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 z-20 pointer-events-none"
         >
-          <p className="font-sans text-[10px] md:text-[11px] tracking-[0.5em] text-[#3E2723] uppercase font-black drop-shadow-md">
+          <p className="font-sans text-[10px] md:text-[11px] tracking-[0.5em] text-[#E84A78] uppercase font-black drop-shadow-md">
             Desliza
           </p>
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ChevronDown className="w-6 h-6 text-[#C5A059]" strokeWidth={3} />
+            <ChevronDown className="w-6 h-6 text-[#3A2318]" strokeWidth={3} />
           </motion.div>
         </motion.div>
       </section>
 
-      {/* GALERÍA EDITORIAL TEXTO EXPANDIDO (RESPONSIVO) */}
-      <section ref={galleryRef} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-b border-[#3E2723]/10">
+      {/* GALERÍA EDITORIAL */}
+      <section ref={galleryRef} className="py-32 px-6 md:px-12 max-w-7xl mx-auto border-b border-[#E84A78]/10">
         <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-            <motion.div style={{ y: yParallaxSlow }} className="w-full md:w-1/2 relative shadow-2xl border-4 border-white bg-white p-2">
+            <motion.div style={{ y: yParallaxSlow }} className="w-full md:w-1/2 relative shadow-2xl border-[6px] border-white bg-white p-2">
                 <img src="/paula1.jpg" alt="Paula 1" className="w-full max-h-[75vh] object-cover block" />
             </motion.div>
             <div className="w-full md:w-1/2 flex flex-col gap-10">
                 <div className="text-center md:text-left">
-                    <h2 className="font-serif text-4xl md:text-5xl text-[#C5A059] italic mb-6 drop-shadow-md">¡Mi primera década!</h2>
-                    <p className="font-sans text-base text-[#3E2723]/90 leading-relaxed tracking-wide font-medium mb-4">
-                      El tiempo vuela y mi primera gran aventura apenas comienza. Cambiaremos el desierto por el agua para celebrar 10 años llenos de risas, juegos y momentos inolvidables.
+                    <h2 className="font-serif text-5xl md:text-6xl text-[#E84A78] italic mb-6 drop-shadow-md font-bold">¡Mi primera década!</h2>
+                    <p className="font-sans text-base text-[#3A2318]/90 leading-relaxed tracking-wide font-medium mb-4">
+                      Saddle up! El tiempo vuela y mi primera gran aventura apenas comienza. Cambiaremos el desierto por el agua para celebrar 10 años llenos de risas y momentos inolvidables.
                     </p>
-                    <p className="font-sans text-base text-[#3E2723]/90 leading-relaxed tracking-wide font-medium">
-                      Acompáñame a disfrutar de una tarde mágica llena de sol y diversión ilimitada. ¡Prepárate para crear recuerdos increíbles juntos en esta albercada con mucho estilo!
+                    <p className="font-sans text-base text-[#3A2318]/90 leading-relaxed tracking-wide font-medium">
+                      Acompáñame a disfrutar de una tarde mágica llena de sol, música y diversión ilimitada. ¡Prepárate para crear recuerdos increíbles juntos en esta albercada con mucho estilo!
                     </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4 relative mt-4">
@@ -160,70 +161,71 @@ const InvitationContent = () => {
       </section>
 
       {/* DÓNDE Y CUÁNDO */}
-      <section className="py-32 px-6 mx-auto max-w-5xl text-center border-b border-[#3E2723]/10 bg-white/40 relative">
-         <h2 className="font-serif text-5xl md:text-6xl text-[#3E2723] italic mb-16 drop-shadow-sm">Dónde & Cuándo</h2>
+      <section className="py-32 px-6 mx-auto max-w-5xl text-center border-b border-[#E84A78]/10 bg-white/60 relative">
+         <h2 className="font-serif text-5xl md:text-6xl text-[#3A2318] italic mb-16 drop-shadow-sm font-bold">Dónde & Cuándo</h2>
          
          <div className="grid gap-8 md:grid-cols-2 relative z-10">
             {/* TARJETA FECHA */}
-            <div className="flex flex-col items-center bg-white/90 backdrop-blur-md p-12 border border-[#3E2723]/10 shadow-xl rounded-sm">
-              <Clock className="h-12 w-12 text-[#C5A059] mb-6" strokeWidth={1.5}/>
-              <h3 className="font-serif text-3xl text-[#3E2723] mb-2 font-bold">Domingo 14 de Junio</h3>
-              <p className="font-sans text-xl text-[#3E2723]/90 font-black mb-1">5:00 PM - 9:00 PM</p>
+            <div className="flex flex-col items-center bg-white/90 backdrop-blur-md p-12 border border-[#E84A78]/20 shadow-xl rounded-xl">
+              <Clock className="h-12 w-12 text-[#E84A78] mb-6" strokeWidth={2}/>
+              <h3 className="font-serif text-3xl text-[#3A2318] mb-2 font-bold">Domingo 14 de Junio</h3>
+              <p className="font-sans text-xl text-[#E84A78] font-black mb-1">5:00 PM - 9:00 PM</p>
             </div>
             
-            {/* TARJETA UBICACIÓN CON FOTO */}
-            <a href="https://maps.app.goo.gl/x3QoKfdBVvnEuYYS6" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center bg-white/90 backdrop-blur-md border border-[#3E2723]/10 shadow-xl rounded-sm hover:shadow-2xl transition-all duration-300 cursor-pointer group flex-grow overflow-hidden relative">
+            {/* TARJETA UBICACIÓN */}
+            <a href="https://maps.app.goo.gl/x3QoKfdBVvnEuYYS6" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center bg-white/90 backdrop-blur-md border border-[#E84A78]/20 shadow-xl rounded-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group flex-grow overflow-hidden relative">
               <div className="w-full h-40 overflow-hidden relative">
                 <img src="/daleda.jpg" alt="Daledá Local" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent"></div>
               </div>
               
               <div className="p-8 w-full flex flex-col items-center -mt-10 relative z-10">
-                <div className="bg-white p-3 rounded-full shadow-md mb-4 group-hover:-translate-y-2 transition-transform duration-300">
-                  <MapPin className="h-8 w-8 text-[#C5A059]" strokeWidth={2}/>
+                <div className="bg-white p-3 rounded-full shadow-lg mb-4 group-hover:-translate-y-2 transition-transform duration-300 border border-[#E84A78]/10">
+                  <MapPin className="h-8 w-8 text-[#E84A78]" strokeWidth={2.5}/>
                 </div>
-                <h3 className="font-serif text-4xl text-[#3E2723] mb-2 font-bold drop-shadow-sm">Daledá</h3>
-                <p className="font-sans text-lg text-[#3E2723] font-black mb-1">Avenida Doce #56</p>
-                <p className="text-[10px] md:text-xs text-[#3E2723]/70 font-sans tracking-widest uppercase leading-relaxed mt-2 max-w-[250px] font-bold">
+                <h3 className="font-serif text-4xl text-[#3A2318] mb-2 font-bold drop-shadow-sm">Daledá</h3>
+                <p className="font-sans text-lg text-[#3A2318] font-black mb-1">Avenida Doce #56</p>
+                <p className="text-[10px] md:text-xs text-[#3A2318]/70 font-sans tracking-widest uppercase leading-relaxed mt-2 max-w-[250px] font-bold">
                   Entre calle uno y dos<br/>Col. Bugambilia, Hermosillo, Sonora.
                 </p>
-                <span className="mt-6 text-[#C5A059] text-xs md:text-sm tracking-widest uppercase font-black border-b-2 border-[#C5A059]/30 pb-1 group-hover:border-[#C5A059] transition-colors">Abrir Google Maps</span>
+                <span className="mt-6 text-[#E84A78] text-xs md:text-sm tracking-widest uppercase font-black border-b-2 border-[#E84A78]/30 pb-1 group-hover:border-[#E84A78] transition-colors">Abrir Google Maps</span>
               </div>
             </a>
          </div>
 
-         {/* DRESS CODE COWGIRL */}
-         <div className="mt-12 bg-[#3E2723] text-[#F7F4EB] p-12 rounded-sm shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#4DB6AC]/20 rounded-full blur-3xl translate-x-10 -translate-y-10"></div>
-            <Sun className="mx-auto h-12 w-12 text-[#C5A059] mb-4" strokeWidth={2} />
-            <h3 className="font-serif text-4xl italic mb-4 drop-shadow-md">Código de Vestimenta</h3>
+         {/* DRESS CODE ROSA VIBRANTE */}
+         <div className="mt-12 bg-[#E84A78] text-white p-12 rounded-xl shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-[#D4AF37]/30 rounded-full blur-3xl translate-x-10 -translate-y-10"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#3A2318]/20 rounded-full blur-2xl -translate-x-10 translate-y-10"></div>
+            <Music className="mx-auto h-12 w-12 text-[#FCF9F6] mb-4 drop-shadow-md" strokeWidth={2.5} />
+            <h3 className="font-serif text-4xl md:text-5xl italic mb-4 drop-shadow-md font-bold text-[#FCF9F6]">Código de Vestimenta</h3>
             <p className="font-sans text-sm md:text-lg font-black tracking-widest uppercase text-white drop-shadow-sm">
-              Traer traje de baño y tu mejor actitud Cowgirl
+              Traje de baño y tu mejor actitud Cowgirl
             </p>
          </div>
 
          <div className="flex justify-center mt-12 relative z-10">
-             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cowgirl+Pool+Party+10+A%C3%B1os+de+Paula&dates=20260614T170000/20260614T210000&details=Traer+traje+de+ba%C3%B1o+y+actitud+Cowgirl!&location=Daled%C3%A1,+Avenida+Doce+%2356,+Col.+Bugambilia,+Hermosillo&sf=true&output=xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#C5A059] text-white px-8 py-4 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#3E2723] transition-all duration-300 shadow-xl active:scale-95 group">
-                <CalendarDays className="h-5 w-5 text-white group-hover:text-[#C5A059] transition-colors" />
+             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cowgirl+Pool+Party+10+A%C3%B1os+de+Paula&dates=20260614T170000/20260614T210000&details=Traer+traje+de+ba%C3%B1o+y+actitud+Cowgirl!&location=Daled%C3%A1,+Avenida+Doce+%2356,+Col.+Bugambilia,+Hermosillo&sf=true&output=xml" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#3A2318] text-white px-10 py-5 rounded-full font-sans text-xs tracking-widest font-black uppercase hover:bg-[#E84A78] transition-all duration-300 shadow-xl active:scale-95 group">
+                <CalendarDays className="h-5 w-5 text-[#E84A78] group-hover:text-white transition-colors" />
                 Agendar Fiesta
              </a>
          </div>
       </section>
 
       {/* REGALOS */}
-      <section className="py-32 px-6 text-center bg-[#F7F4EB] relative overflow-hidden">
+      <section className="py-32 px-6 text-center bg-[#FCF9F6] relative overflow-hidden">
         <div className="max-w-2xl mx-auto relative z-10">
-            <Gift className="mx-auto h-16 w-16 text-[#C5A059] mb-8 drop-shadow-sm" strokeWidth={1.5} />
-            <h2 className="font-serif text-5xl md:text-6xl text-[#3E2723] italic mb-8 drop-shadow-sm">Regalos</h2>
-            <p className="mb-0 font-sans text-base md:text-lg text-[#3E2723] font-semibold leading-relaxed tracking-wide max-w-lg mx-auto bg-white/90 backdrop-blur-md p-10 md:p-12 rounded-sm shadow-xl border border-[#3E2723]/10">
+            <Gift className="mx-auto h-16 w-16 text-[#E84A78] mb-8 drop-shadow-sm" strokeWidth={2} />
+            <h2 className="font-serif text-5xl md:text-6xl text-[#3A2318] italic mb-8 drop-shadow-sm font-bold">Regalos</h2>
+            <p className="mb-0 font-sans text-base md:text-lg text-[#3A2318] font-bold leading-relaxed tracking-wide max-w-lg mx-auto bg-white/90 backdrop-blur-md p-10 md:p-12 rounded-xl shadow-xl border border-[#E84A78]/20">
               Tu presencia es mi mayor alegría. Si deseas darme un obsequio, puedes traer un regalo sorpresa o participar en la lluvia de sobres. ¡Lo que tú prefieras! 💌 🎁
             </p>
         </div>
       </section>
 
-      <footer className="py-16 text-center border-t border-[#3E2723]/10 bg-white">
-          <p className="font-serif text-4xl text-[#3E2723]/40 italic font-bold">Paula</p>
-          <p className="font-sans text-[10px] uppercase tracking-widest text-[#3E2723]/30 mt-3 font-black">10 Años</p>
+      <footer className="py-16 text-center border-t border-[#E84A78]/20 bg-white">
+          <p className="font-serif text-4xl text-[#E84A78]/80 italic font-bold">Paula</p>
+          <p className="font-sans text-[10px] uppercase tracking-widest text-[#3A2318]/50 mt-3 font-black">10 Años</p>
       </footer>
     </motion.div>
   );
@@ -273,7 +275,7 @@ export default function Home() {
   }, [hasOpened]);
 
   return (
-    <main className="relative bg-[#F7F4EB] text-[#3E2723] font-sans overflow-hidden min-h-screen">
+    <main className="relative bg-[#FCF9F6] text-[#3A2318] font-sans overflow-hidden min-h-screen">
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.05] pointer-events-none z-50"></div>
       
       <AnimatePresence>

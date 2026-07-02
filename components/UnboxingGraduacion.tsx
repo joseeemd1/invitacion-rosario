@@ -59,7 +59,7 @@ export default function UnboxingGraduacion({
             className="group relative flex h-64 w-64 md:h-80 md:w-80 items-center justify-center rounded-full shadow-[0_20px_50px_rgba(139,101,8,0.15)] border border-[#D4AF37]/40 cursor-pointer overflow-hidden bg-white z-20"
           >
             <img 
-              src="/logo-escuela.png" 
+              src="/sello-graduacion.png" 
               alt="Sello" 
               className="absolute inset-0 h-full w-full object-contain p-4 z-10 opacity-95 transition-transform duration-1000 group-hover:scale-110" 
             />

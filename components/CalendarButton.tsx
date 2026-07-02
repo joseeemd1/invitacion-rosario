@@ -11,19 +11,7 @@ export default function CalendarButton({ eventData }: { eventData: any }) {
     const start = formatDate(eventData.date);
     const end = formatDate(new Date(new Date(eventData.date).getTime() + 2 * 60 * 60 * 1000).toISOString());
 
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Generación ${eventData.generation}//ES
-BEGIN:VEVENT
-UID:${new Date().getTime()}@migraduacion.pro
-DTSTAMP:${start}
-DTSTART:${start}
-DTEND:${end}
-SUMMARY:Graduación ${eventData.school}
-DESCRIPTION:Graduación Generación ${eventData.nameGeneration}
-LOCATION:${eventData.location}
-END:VEVENT
-END:VCALENDAR`;
+    const icsContent = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Generación ${eventData.generation}//ES\nBEGIN:VEVENT\nUID:${new Date().getTime()}@migraduacion.pro\nDTSTAMP:${start}\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:Graduación ${eventData.school}\nDESCRIPTION:Graduación Generación ${eventData.nameGeneration}\nLOCATION:${eventData.location}\nEND:VEVENT\nEND:VCALENDAR`;
 
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const link = document.createElement('a');
@@ -37,10 +25,9 @@ END:VCALENDAR`;
   return (
     <button 
       onClick={generateICS}
-      className="inline-flex items-center space-x-2 bg-transparent border border-[#1A1A1A] text-[#1A1A1A] px-6 py-3 text-[10px] uppercase tracking-widest hover:bg-[#1A1A1A] hover:text-[#F7F5F0] transition-colors"
+      className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border border-[#D4AF37] text-[#D4AF37] text-[10px] tracking-[0.2em] uppercase rounded-full hover:bg-[#D4AF37] hover:text-white transition-colors duration-300"
     >
-      <CalendarPlus size={14} />
-      <span>Agendar Evento</span>
+      <CalendarPlus size={14} /> Agendar
     </button>
   );
 }

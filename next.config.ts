@@ -3,19 +3,16 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        // Si el usuario entra a migraduacion.pro o www.migraduacion.pro
         source: '/',
-        has: [
-          {
-            type: 'host',
-            value: '(?<host>.*migraduacion\\.pro)',
-          },
-        ],
-        // Muestra silenciosamente la carpeta graduacion sin cambiar la URL
+        has: [{ type: 'host', value: 'migraduacion.pro' }],
         destination: '/graduacion',
       },
+      {
+        source: '/',
+        has: [{ type: 'host', value: 'www.migraduacion.pro' }],
+        destination: '/graduacion',
+      }
     ];
   },
 };
-
 export default nextConfig;

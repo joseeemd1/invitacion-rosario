@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import UnboxingGraduacion from "../../components/UnboxingGraduacion";
 import CalendarButton from "../../components/CalendarButton";
 import FloatingElements from "../../components/FloatingElements";
+import GoldDust from "../../components/GoldDust";
 import { EVENT_DATA, MENCIONES_ESPECIALES, ITINERARIO, ALUMNOS_6A, ALUMNOS_6B } from "./data";
 import * as LucideIcons from "lucide-react";
 
@@ -16,7 +17,7 @@ const formatTitleCase = (str: string) => {
 
 export default function GraduacionPage() {
   const [hasOpened, setHasOpened] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [zoomedImg, setZoomedImg] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -37,10 +38,14 @@ export default function GraduacionPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const toggleMute = () => {
+  const toggleMusic = () => {
     if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(e => console.log(e));
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
@@ -51,9 +56,13 @@ export default function GraduacionPage() {
 
   return (
     <>
-      <audio ref={audioRef} src="/cancion-graduacion.mp3" loop preload="auto" playsInline />
+      <audio ref={audioRef} src="/cancion-graduacion.mp3" loop />
       
-      <UnboxingGraduacion onOpen={() => setHasOpened(true)} audioRef={audioRef} />
+      <UnboxingGraduacion 
+        onOpen={() => setHasOpened(true)} 
+        audioRef={audioRef} 
+        setGlobalPlay={setIsPlaying} 
+      />
       
       <AnimatePresence>
         {zoomedImg && (
@@ -79,14 +88,27 @@ export default function GraduacionPage() {
       <main className={`relative w-full bg-[#FDFBF7] text-[#1C2321] transition-all duration-[1500ms] ease-in-out ${hasOpened ? 'opacity-100 transform-none' : 'opacity-0 translate-y-12 h-screen overflow-hidden'}`}>
         
         <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0 mix-blend-multiply" style={{ backgroundImage: noisePattern }} />
-        {hasOpened && <FloatingElements />}
+        
+        {/* INYECCIÓN DE SISTEMAS FLOTANTES Y POLVO DE ORO */}
+        {hasOpened && (
+          <>
+            <FloatingElements />
+            <GoldDust />
+          </>
+        )}
 
-        <button 
-          onClick={toggleMute}
-          className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-white text-[#8B6508] shadow-[0_10px_30px_rgba(0,0,0,0.1)] hover:scale-105 transition-transform border border-[#8B6508]/20"
-        >
-          {isMuted ? <LucideIcons.VolumeX size={18} /> : <LucideIcons.Volume2 size={18} />}
-        </button>
+        <AnimatePresence>
+          {hasOpened && (
+            <motion.button 
+              onClick={(e) => { e.stopPropagation(); toggleMusic(); }}
+              initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all duration-500 border border-[#8B6508]/20 ${isPlaying ? 'bg-[#1C2321] text-[#D4AF37]' : 'bg-white text-[#8B6508]'}`}
+            >
+              {isPlaying ? <LucideIcons.Pause className="w-5 h-5" /> : <LucideIcons.Play className="w-5 h-5 ml-1" />}
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         {/* 1. HERO */}
         <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
@@ -147,7 +169,7 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 3. MENCIONES ESPECIALES (Reubicado Aquí) */}
+        {/* 3. MENCIONES ESPECIALES */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
           <div className="max-w-5xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
@@ -186,9 +208,9 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 5. DIRECTORIO DE ALUMNOS */}
+        {/* 5. GALERÍA DE HONOR (Renombrado desde "Directorio") */}
         <section className="relative z-10 py-32 border-t border-[#8B6508]/20 bg-[#FDFBF7]">
-          <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Directorio</h2>
+          <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Galería de Honor</h2>
           <div className="w-24 h-1 bg-[#8B6508] mx-auto mb-24 rounded-full" />
           
           <div className="w-full mb-32">

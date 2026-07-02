@@ -6,20 +6,25 @@ const noisePattern = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns
 
 export default function UnboxingGraduacion({ 
   onOpen, 
-  audioRef 
+  audioRef,
+  setGlobalPlay // Recibimos el control de estado desde el padre
 }: { 
   onOpen: () => void; 
-  audioRef: React.MutableRefObject<HTMLAudioElement | null> 
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>;
+  setGlobalPlay: (state: boolean) => void;
 }) {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpen = () => {
+    if (isOpened) return; // Evitar dobles clics
     setIsOpened(true);
     
-    // Motor de audio simplificado y directo (Como en la versión "suegra")
+    // Inyección de Audio Grado Producción
     if (audioRef.current) {
-      audioRef.current.volume = 0.6;
-      audioRef.current.play().catch((e) => console.log("Autoplay bloqueado:", e));
+      audioRef.current.volume = 0.5;
+      audioRef.current.play()
+        .then(() => setGlobalPlay(true))
+        .catch((e) => console.log("Autoplay bloqueado (requiere tap adicional):", e));
     }
     
     setTimeout(() => {
@@ -32,58 +37,51 @@ export default function UnboxingGraduacion({
       {!isOpened && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.02 }}
+          exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
           transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FDFBF7] px-4 overflow-hidden"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FDFBF7] px-4 overflow-hidden cursor-pointer"
+          onClick={handleOpen} // El clic ahora abarca toda la pantalla
         >
-          <div 
-            className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-multiply" 
-            style={{ backgroundImage: noisePattern }}
-          />
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply" style={{ backgroundImage: noisePattern }} />
 
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3 }}
-            className="text-center mb-16 z-10 flex flex-col items-center"
+            className="text-center mb-12 z-10 flex flex-col items-center w-full"
           >
-            {/* Texto Ampliado */}
-            <p className="font-montserrat text-xs md:text-sm uppercase tracking-[0.6em] text-[#1C2321]/60 mb-8 font-semibold">
+            <p className="font-montserrat text-sm md:text-base uppercase tracking-[0.6em] text-[#1C2321]/70 mb-8 font-semibold">
               Invitación Oficial
             </p>
-            {/* Título Ampliado */}
-            <p className="font-cormorant text-6xl md:text-7xl italic text-[#1C2321] leading-tight font-medium">
-              Ceremonia de <br/>Graduación
+            <p className="font-cormorant text-5xl md:text-7xl italic text-[#1C2321] leading-tight font-medium">
+              Ceremonia de<br/>Graduación
             </p>
           </motion.div>
 
-          <motion.button
-            onClick={handleOpen}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            animate={{ y: [0, -8, 0] }}
-            transition={{ y: { repeat: Infinity, duration: 5, ease: "easeInOut" } }}
-            className="group relative flex h-56 w-56 md:h-72 md:w-72 items-center justify-center rounded-full shadow-[0_20px_50px_rgba(212,175,55,0.1)] border border-[#D4AF37]/30 cursor-pointer overflow-hidden bg-white"
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            animate={{ y: [0, -10, 0] }}
+            transition={{ y: { repeat: Infinity, duration: 4, ease: "easeInOut" } }}
+            className="group relative flex h-64 w-64 md:h-80 md:w-80 items-center justify-center rounded-full shadow-[0_20px_50px_rgba(139,101,8,0.15)] border border-[#D4AF37]/40 overflow-hidden bg-white z-20"
           >
-            <div className="absolute inset-0 bg-[#D4AF37] opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
             <img 
-              src="/sello-graduacion.png" 
+              src="/logo-escuela.png" 
               alt="Sello" 
-              className="absolute inset-0 h-full w-full object-cover z-10 opacity-95 transition-transform duration-1000 group-hover:scale-105" 
+              className="absolute inset-0 h-full w-full object-contain p-4 z-10 opacity-95 transition-transform duration-1000 group-hover:scale-110" 
             />
-          </motion.button>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="mt-20 flex flex-col items-center gap-4"
+            className="mt-16 flex flex-col items-center gap-4 z-10"
           >
-            {/* Texto Ampliado */}
-            <p className="font-montserrat text-xs md:text-sm uppercase tracking-[0.5em] text-[#D4AF37] font-bold">
-              Toque para abrir
+            <p className="font-montserrat text-xs md:text-sm uppercase tracking-[0.5em] text-[#8B6508] font-bold">
+              Toque la pantalla para abrir
             </p>
-            <span className="h-12 w-[2px] bg-gradient-to-b from-[#D4AF37] to-transparent opacity-50" />
+            <span className="h-16 w-[2px] bg-gradient-to-b from-[#8B6508] to-transparent opacity-60" />
           </motion.div>
         </motion.div>
       )}

@@ -14,14 +14,15 @@ export const MENCIONES_ESPECIALES = [
   { rol: "Maestra 6-B", nombre: "Martha Celia Solis Hermosillo" },
 ];
 
+// Reemplaza solo la constante ITINERARIO en tu data.ts
 export const ITINERARIO = [
-  { time: "5:30 PM", event: "Honores a la bandera" },
-  { time: "5:45 PM", event: "Presentación del presidium" },
-  { time: "6:00 PM", event: "Palabras de bienvenida" },
-  { time: "6:15 PM", event: "Último pase de lista 6-A" },
-  { time: "6:30 PM", event: "Entrega de reconocimientos especiales" },
-  { time: "6:45 PM", event: "Último pase de lista 6-B" },
-  { time: "7:00 PM", event: "Clausura" },
+  { time: "5:30 PM", event: "Honores a la bandera", icon: "Flag" },
+  { time: "5:45 PM", event: "Presentación del presidium", icon: "Users" },
+  { time: "6:00 PM", event: "Palabras de bienvenida", icon: "Mic" },
+  { time: "6:15 PM", event: "Último pase de lista 6-A", icon: "ClipboardCheck" },
+  { time: "6:30 PM", event: "Entrega de reconocimientos", icon: "Award" },
+  { time: "6:45 PM", event: "Último pase de lista 6-B", icon: "ClipboardCheck" },
+  { time: "7:00 PM", event: "Clausura", icon: "GraduationCap" },
 ];
 
 export const ALUMNOS_6A = [

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -17,16 +16,10 @@ export default function UnboxingGraduacion({
   const handleOpen = () => {
     setIsOpened(true);
     
-    // Fuerza bruta para eludir el bloqueo de Autoplay
+    // Motor de audio simplificado y directo (Como en la versión "suegra")
     if (audioRef.current) {
-      audioRef.current.volume = 0.5;
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Si falla en el primer click, forzamos un evento síncrono secundario
-          document.addEventListener('click', () => audioRef.current?.play(), { once: true });
-        });
-      }
+      audioRef.current.volume = 0.6;
+      audioRef.current.play().catch((e) => console.log("Autoplay bloqueado:", e));
     }
     
     setTimeout(() => {
@@ -54,10 +47,12 @@ export default function UnboxingGraduacion({
             transition={{ duration: 1.2, delay: 0.3 }}
             className="text-center mb-16 z-10 flex flex-col items-center"
           >
-            <p className="font-montserrat text-[11px] uppercase tracking-[0.6em] text-[#1C2321]/60 mb-8 font-light">
+            {/* Texto Ampliado */}
+            <p className="font-montserrat text-xs md:text-sm uppercase tracking-[0.6em] text-[#1C2321]/60 mb-8 font-semibold">
               Invitación Oficial
             </p>
-            <p className="font-cormorant text-4xl md:text-5xl italic text-[#1C2321] leading-tight font-medium">
+            {/* Título Ampliado */}
+            <p className="font-cormorant text-6xl md:text-7xl italic text-[#1C2321] leading-tight font-medium">
               Ceremonia de <br/>Graduación
             </p>
           </motion.div>
@@ -82,12 +77,13 @@ export default function UnboxingGraduacion({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="mt-20 flex flex-col items-center gap-3"
+            className="mt-20 flex flex-col items-center gap-4"
           >
-            <p className="font-montserrat text-[10px] uppercase tracking-[0.5em] text-[#D4AF37] font-medium">
+            {/* Texto Ampliado */}
+            <p className="font-montserrat text-xs md:text-sm uppercase tracking-[0.5em] text-[#D4AF37] font-bold">
               Toque para abrir
             </p>
-            <span className="h-12 w-[1px] bg-gradient-to-b from-[#D4AF37] to-transparent opacity-50" />
+            <span className="h-12 w-[2px] bg-gradient-to-b from-[#D4AF37] to-transparent opacity-50" />
           </motion.div>
         </motion.div>
       )}

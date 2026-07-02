@@ -3,18 +3,18 @@ import { motion } from "framer-motion";
 import { GraduationCap, Scroll, Star } from "lucide-react";
 
 export default function FloatingElements() {
-  // Matriz de coordenadas calculadas para evitar colpo de calor en GPU
   const elements = [
-    { Icon: GraduationCap, top: "15%", left: "10%", delay: 0, size: 32 },
-    { Icon: Scroll, top: "45%", left: "85%", delay: 1.5, size: 28 },
-    { Icon: Star, top: "75%", left: "15%", delay: 3, size: 24 },
-    { Icon: GraduationCap, top: "25%", left: "80%", delay: 2, size: 40 },
-    { Icon: Scroll, top: "85%", left: "75%", delay: 0.5, size: 32 },
-    { Icon: Star, top: "35%", left: "5%", delay: 2.5, size: 20 },
+    { Icon: GraduationCap, top: "15%", left: "10%", delay: 0, size: 64 },
+    { Icon: Scroll, top: "45%", left: "85%", delay: 1.5, size: 56 },
+    { Icon: Star, top: "75%", left: "15%", delay: 3, size: 48 },
+    { Icon: GraduationCap, top: "25%", left: "80%", delay: 2, size: 72 },
+    { Icon: Scroll, top: "85%", left: "75%", delay: 0.5, size: 64 },
+    { Icon: Star, top: "35%", left: "5%", delay: 2.5, size: 40 },
   ];
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20">
+    // Opacidad incrementada al 40%
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
       {elements.map((el, idx) => (
         <motion.div
           key={idx}

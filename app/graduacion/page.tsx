@@ -8,10 +8,8 @@ import FloatingElements from "../../components/FloatingElements";
 import { EVENT_DATA, MENCIONES_ESPECIALES, ITINERARIO, ALUMNOS_6A, ALUMNOS_6B } from "./data";
 import * as LucideIcons from "lucide-react";
 
-// Textura base
 const noisePattern = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
 
-// Utilidad Matemática: Formateo de nombres estricto (Title Case)
 const formatTitleCase = (str: string) => {
   return str.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase());
 };
@@ -46,7 +44,6 @@ export default function GraduacionPage() {
     }
   };
 
-  // Renderizador dinámico de iconos
   const renderIcon = (iconName: string) => {
     const IconComponent = (LucideIcons as any)[iconName];
     return IconComponent ? <IconComponent size={20} className="text-[#8B6508]" /> : <LucideIcons.CheckCircle size={20} className="text-[#8B6508]" />;
@@ -54,12 +51,10 @@ export default function GraduacionPage() {
 
   return (
     <>
-      {/* Audio Engine - preload="auto" y playsInline forzan la precarga */}
       <audio ref={audioRef} src="/cancion-graduacion.mp3" loop preload="auto" playsInline />
       
       <UnboxingGraduacion onOpen={() => setHasOpened(true)} audioRef={audioRef} />
       
-      {/* Módulo Lightbox (Modo Dios Zoom) */}
       <AnimatePresence>
         {zoomedImg && (
           <motion.div 
@@ -83,11 +78,9 @@ export default function GraduacionPage() {
 
       <main className={`relative w-full bg-[#FDFBF7] text-[#1C2321] transition-all duration-[1500ms] ease-in-out ${hasOpened ? 'opacity-100 transform-none' : 'opacity-0 translate-y-12 h-screen overflow-hidden'}`}>
         
-        {/* Componentes de Fondo Absoluto */}
         <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0 mix-blend-multiply" style={{ backgroundImage: noisePattern }} />
         {hasOpened && <FloatingElements />}
 
-        {/* Botón de Audio Flotante */}
         <button 
           onClick={toggleMute}
           className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-white text-[#8B6508] shadow-[0_10px_30px_rgba(0,0,0,0.1)] hover:scale-105 transition-transform border border-[#8B6508]/20"
@@ -95,7 +88,7 @@ export default function GraduacionPage() {
           {isMuted ? <LucideIcons.VolumeX size={18} /> : <LucideIcons.Volume2 size={18} />}
         </button>
 
-        {/* 1. HERO - MAGNITUD TOTAL */}
+        {/* 1. HERO */}
         <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
           <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-10 font-semibold">
             Generación 2020 - 2026
@@ -117,11 +110,9 @@ export default function GraduacionPage() {
           </h1>
         </section>
 
-        {/* 2. LOCACIÓN Y CUENTA REGRESIVA GLASSMORPHISM */}
+        {/* 2. LOCACIÓN Y CUENTA REGRESIVA */}
         <section className="relative z-10 py-32 px-4 md:px-12">
-          {/* Contenedor Glassmorphism Premium */}
           <div className="max-w-7xl mx-auto relative rounded-[40px] overflow-hidden shadow-2xl border border-white/20 bg-[#1C2321]">
-            {/* Imagen de fondo difuminada para efecto cristal */}
             <div className="absolute inset-0 opacity-40 bg-[url('/6a-foto1.jpg')] bg-cover bg-center grayscale mix-blend-overlay" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#1C2321]/80 to-[#1C2321]/95 backdrop-blur-md" />
             
@@ -139,7 +130,6 @@ export default function GraduacionPage() {
                 </div>
               </div>
 
-              {/* Conteo de Días - Modo Glass */}
               <div className="flex items-center justify-center">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
                   {[
@@ -157,8 +147,27 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 3. ITINERARIO CON ICONOS */}
-        <section className="relative z-10 py-32 px-6">
+        {/* 3. MENCIONES ESPECIALES (Reubicado Aquí) */}
+        <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
+          <div className="max-w-5xl mx-auto text-center">
+            <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
+              {MENCIONES_ESPECIALES.map((mencion, idx) => (
+                <div key={idx} className="flex flex-col items-center bg-white p-8 rounded-2xl shadow-lg border border-[#8B6508]/10 hover:shadow-xl transition-shadow">
+                  <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">{mencion.rol}</span>
+                  <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(mencion.nombre)}</span>
+                </div>
+              ))}
+              <div className="flex flex-col items-center md:col-start-2 bg-white p-8 rounded-2xl shadow-lg border border-[#8B6508]/10 hover:shadow-xl transition-shadow">
+                  <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">Pta. Sociedad de Alumnos</span>
+                  <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(EVENT_DATA.president)}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. ITINERARIO */}
+        <section className="relative z-10 py-32 px-6 border-t border-[#8B6508]/20 bg-white">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-cormorant text-5xl md:text-7xl text-center mb-24 text-[#1C2321] font-medium">Itinerario</h2>
             <div className="space-y-12 relative before:absolute before:inset-0 before:ml-[5.5rem] md:before:ml-[7.5rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#8B6508]/30 before:to-transparent">
@@ -177,19 +186,17 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. DIRECTORIO DE ALUMNOS (Lujo e Interactividad) */}
-        <section className="relative z-10 py-32 border-t border-[#8B6508]/20 bg-white shadow-2xl rounded-t-[60px]">
+        {/* 5. DIRECTORIO DE ALUMNOS */}
+        <section className="relative z-10 py-32 border-t border-[#8B6508]/20 bg-[#FDFBF7]">
           <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Directorio</h2>
           <div className="w-24 h-1 bg-[#8B6508] mx-auto mb-24 rounded-full" />
           
-          {/* GRUPO 6-A */}
           <div className="w-full mb-32">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
               <h3 className="font-cormorant text-6xl italic text-[#8B6508] mb-4">Grupo 6-A</h3>
               <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#1C2321]/50 font-bold">{ALUMNOS_6A.length} Alumnos</span>
             </div>
             
-            {/* Carrusel Interactivo - Clickeable para Zoom */}
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
               {[1, 2, 3, 4, 5].map((num) => {
                 const src = `/6a-foto${num}.jpg`;
@@ -212,7 +219,6 @@ export default function GraduacionPage() {
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
                 {ALUMNOS_6A.map((alumno, idx) => (
                   <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between group cursor-default">
-                    {/* INYECCIÓN DEL FORMATEADOR DE NOMBRES */}
                     <span>{formatTitleCase(alumno)}</span>
                     <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#8B6508] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
                   </li>
@@ -221,7 +227,6 @@ export default function GraduacionPage() {
             </div>
           </div>
 
-          {/* GRUPO 6-B */}
           <div className="w-full pb-20">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
               <h3 className="font-cormorant text-6xl italic text-[#8B6508] mb-4">Grupo 6-B</h3>
@@ -250,7 +255,6 @@ export default function GraduacionPage() {
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
                 {ALUMNOS_6B.map((alumno, idx) => (
                   <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between group cursor-default">
-                    {/* INYECCIÓN DEL FORMATEADOR DE NOMBRES */}
                     <span>{formatTitleCase(alumno)}</span>
                     <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#8B6508] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
                   </li>
@@ -260,23 +264,6 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 5. MENCIONES ESPECIALES */}
-        <section className="relative z-10 py-40 px-6 border-t border-[#8B6508]/30 bg-[#FDFBF7]">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
-              {MENCIONES_ESPECIALES.map((mencion, idx) => (
-                <div key={idx} className="flex flex-col items-center">
-                  <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">{mencion.rol}</span>
-                  <span className="font-cormorant text-3xl md:text-4xl text-[#1C2321] font-medium">{mencion.nombre}</span>
-                </div>
-              ))}
-              <div className="flex flex-col items-center md:col-start-2">
-                  <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">Pta. Sociedad de Alumnos</span>
-                  <span className="font-cormorant text-3xl md:text-4xl text-[#1C2321] font-medium">{formatTitleCase(EVENT_DATA.president)}</span>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </>
   );

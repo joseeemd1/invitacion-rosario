@@ -1,36 +1,33 @@
-import type { Metadata } from "next";
+import SmoothScroller from "@/components/SmoothScroller";
+import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 
-// Aquí le decimos a WhatsApp y Facebook exactamente qué leer
-export const metadata: Metadata = {
-  title: "Cumpleaños 50 | María del Rosario",
-  description: "Acompáñame a celebrar mi medio siglo de vida. Sábado 18 de Abril.",
-  openGraph: {
-    title: "Cumpleaños 50 | María del Rosario",
-    description: "Acompáñame a celebrar mi medio siglo de vida.",
-    url: "https://mifestejo.mom",
-    siteName: "Invitación Rosario",
-    images: [
-      {
-        url: "/preview.jpg", // Esta es la foto que arrastraste a la carpeta public
-        width: 1200,
-        height: 630,
-        alt: "Invitación 50 Años Rosario",
-      },
-    ],
-    locale: "es_MX",
-    type: "website",
-  },
+// Fuentes Tier 1
+const cormorant = Cormorant_Garamond({ 
+  subsets: ["latin"], 
+  weight: ["300", "400", "600"],
+  variable: "--font-cormorant" 
+});
+
+const montserrat = Montserrat({ 
+  subsets: ["latin"], 
+  weight: ["200", "300", "400"],
+  variable: "--font-montserrat" 
+});
+
+export const metadata = {
+  title: "Graduación | Generación 2026",
+  description: "Invitación Oficial - High End Editorial",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function GraduacionLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
-      <body>{children}</body>
+    <html lang="es" className="scroll-smooth">
+      <body className={`${cormorant.variable} ${montserrat.variable} bg-[#F7F5F0] text-[#1A1A1A] antialiased selection:bg-[#C5A880] selection:text-white`}>
+        <SmoothScroller>
+          {children}
+        </SmoothScroller>
+      </body>
     </html>
   );
 }

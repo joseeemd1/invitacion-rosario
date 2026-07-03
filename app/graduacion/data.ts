@@ -17,7 +17,7 @@ export const MENCIONES_ESPECIALES = [
   { rol: "Directora del Plantel", nombre: "Mtra. Ángela Córdova Villegas" },
   { rol: "Director USAER", nombre: "Mtro. Eduardo Quiñónez Higuera" },
   { rol: "Maestro 6-A", nombre: "Juan Ángel Trejo Bujanda" },
-  { rol: "Maestra 6-B", nombre: "Martha Celia Solís Hermosillo" },
+  { rol: "Maestra 6-B", nombre: "Martha Celia Solis Hermosillo" },
   { rol: "Pta. Sociedad de Padres", nombre: "Mayra Lizbeth Romero Vázquez" },
   { rol: "Pta. Sociedad de Alumnos", nombre: "Karol Guadalupe Sandoval Rochin" }
 ];

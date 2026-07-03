@@ -156,7 +156,7 @@ export default function GraduacionPage() {
             <div className="flex-1 text-center lg:text-left z-10 w-full">
               <p className="font-montserrat text-[10px] tracking-[0.4em] uppercase text-[#D4AF37] mb-4 font-bold">Ubicación & Fecha</p>
               <p className="font-cormorant text-4xl md:text-5xl text-white mb-2">{EVENT_DATA.location}</p>
-              <p className="font-cormorant text-2xl text-white/70 mb-8 italic">15 de Julio • 10:00 AM</p>
+              <p className="font-cormorant text-2xl text-white/70 mb-8 italic">15 de Julio • 05:30 PM</p>
               
               <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                 <a href={EVENT_DATA.mapUrl} target="_blank" rel="noreferrer" className="px-6 md:px-8 py-4 bg-[#D4AF37] text-[#191D1C] text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:bg-white transition-colors duration-300 flex items-center gap-2">

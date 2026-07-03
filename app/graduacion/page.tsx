@@ -113,7 +113,7 @@ export default function GraduacionPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. HERO */}
+        {/* 1. HERO - ESCALA DEL LOGO MAXIMIZADA */}
         <section className="relative min-h-[100vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
           <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-8 font-semibold">
             Generación 2020 - 2026
@@ -123,12 +123,12 @@ export default function GraduacionPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.5, delay: 0.5 }}
-            className="relative w-[240px] md:w-[350px] aspect-square mb-8"
+            className="relative w-[340px] sm:w-[420px] md:w-[550px] lg:w-[650px] aspect-square mb-8"
           >
             <img 
               src="/logo-escuela.png" 
               alt="Logo Escuela" 
-              className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl"
+              className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
             />
           </motion.div>
           
@@ -148,34 +148,36 @@ export default function GraduacionPage() {
           </p>
         </section>
 
-        {/* 3. LOCACIÓN Y CUENTA REGRESIVA */}
+        {/* 3. LOCACIÓN Y CUENTA REGRESIVA - RESPONSIVIDAD LÍQUIDA */}
         <section className="relative z-10 py-20 px-4 md:px-12">
-          <div className="max-w-6xl mx-auto bg-[#191D1C] rounded-[40px] p-8 md:p-16 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12 relative overflow-hidden">
+          <div className="max-w-6xl mx-auto bg-[#191D1C] rounded-[40px] p-6 sm:p-10 md:p-16 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 pointer-events-none mix-blend-overlay" />
             
-            <div className="flex-1 text-center lg:text-left z-10">
+            <div className="flex-1 text-center lg:text-left z-10 w-full">
               <p className="font-montserrat text-[10px] tracking-[0.4em] uppercase text-[#D4AF37] mb-4 font-bold">Ubicación & Fecha</p>
               <p className="font-cormorant text-4xl md:text-5xl text-white mb-2">{EVENT_DATA.location}</p>
               <p className="font-cormorant text-2xl text-white/70 mb-8 italic">15 de Julio • 5:30 PM</p>
               
               <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-                <a href={EVENT_DATA.mapUrl} target="_blank" rel="noreferrer" className="px-8 py-4 bg-[#D4AF37] text-[#191D1C] text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:bg-white transition-colors duration-300 flex items-center gap-2">
+                <a href={EVENT_DATA.mapUrl} target="_blank" rel="noreferrer" className="px-6 md:px-8 py-4 bg-[#D4AF37] text-[#191D1C] text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:bg-white transition-colors duration-300 flex items-center gap-2">
                   <LucideIcons.MapPin size={14} /> Cómo Llegar
                 </a>
                 <CalendarButton eventData={EVENT_DATA} />
               </div>
             </div>
 
-            <div className="flex gap-3 md:gap-4 z-10">
-              {[
-                { l: 'Días', v: timeLeft.days }, { l: 'Hrs', v: timeLeft.hours },
-                { l: 'Min', v: timeLeft.minutes }, { l: 'Seg', v: timeLeft.seconds }
-              ].map((item, idx) => (
-                <div key={idx} className="flex flex-col items-center justify-center w-20 h-28 md:w-28 md:h-36 bg-white/5 border border-white/10 rounded-2xl shadow-inner backdrop-blur-md">
-                  <span className="font-montserrat text-3xl md:text-5xl text-white font-light">{item.v.toString().padStart(2, '0')}</span>
-                  <span className="font-montserrat text-[8px] md:text-[10px] tracking-[0.2em] uppercase text-[#D4AF37] mt-3 font-bold">{item.l}</span>
-                </div>
-              ))}
+            <div className="w-full lg:w-auto z-10">
+              <div className="flex w-full justify-between gap-2 md:gap-4">
+                {[
+                  { l: 'Días', v: timeLeft.days }, { l: 'Hrs', v: timeLeft.hours },
+                  { l: 'Min', v: timeLeft.minutes }, { l: 'Seg', v: timeLeft.seconds }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex flex-col items-center justify-center w-[23%] md:w-28 aspect-[3/4] md:aspect-auto md:h-36 bg-white/5 border border-white/10 rounded-xl md:rounded-2xl shadow-inner backdrop-blur-md">
+                    <span className="font-montserrat text-2xl md:text-5xl text-white font-light">{item.v.toString().padStart(2, '0')}</span>
+                    <span className="font-montserrat text-[7px] md:text-[10px] tracking-[0.2em] uppercase text-[#D4AF37] mt-2 md:mt-3 font-bold">{item.l}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>

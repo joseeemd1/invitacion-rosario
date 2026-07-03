@@ -9,7 +9,7 @@ export const EVENT_DATA = {
 };
 
 export const MENCIONES_ESPECIALES = [
-  { rol: "Secretaria de Educación y Cultura", nombre: "Beatriz Cota Ponce" },
+  { rol: "Secretaria de Educación y Cultura", nombre: "Dr. (a) Beatriz Cota Ponce" },
   { rol: "Secretario SNTE 54", nombre: "Mtro. Jesús Javier Ceballos Corral" },
   { rol: "Directora Primarias Estatales", nombre: "Mtra. Lizbeth Anahí Salazar Razo" },
   { rol: "Jefa de Sector 3", nombre: "Mtra. Rosa Amelia Peralta Mendoza" },

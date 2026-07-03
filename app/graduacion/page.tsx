@@ -11,8 +11,11 @@ import * as LucideIcons from "lucide-react";
 
 const noisePattern = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
 
+// ALGORITMO CORREGIDO: Soporte absoluto para caracteres UTF-8 (Acentos)
 const formatTitleCase = (str: string) => {
-  return str.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase());
+  return str.toLowerCase().split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
 };
 
 export default function GraduacionPage() {
@@ -109,17 +112,30 @@ export default function GraduacionPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. HERO REESTRUCTURADO */}
-        <section className="relative min-h-[100vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
-          <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-10 font-semibold">
+        {/* 1. HERO - RESTAURACIÓN DEL LOGO ESCUELA */}
+        <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
+          <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-8 font-semibold">
             Generación 2020 - 2026
           </p>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, delay: 0.5 }}
+            className="relative w-[240px] md:w-[350px] aspect-square mb-8"
+          >
+            <img 
+              src="/logo-escuela.png" 
+              alt="Logo Escuela" 
+              className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl"
+            />
+          </motion.div>
           
-          <div className="w-px h-20 bg-[#8B6508]/40 mb-10" />
+          <div className="w-px h-16 bg-[#8B6508]/40 mb-8" />
           
-          <h1 className="font-cormorant text-6xl md:text-8xl text-[#1C2321] leading-tight flex flex-col items-center">
-            <span className="font-bold tracking-wide mb-2 uppercase text-5xl md:text-7xl">Generación</span>
-            <span className="italic text-[#8B6508] font-medium text-4xl md:text-6xl">Maestra Ángela Córdova Villegas</span>
+          <h1 className="font-cormorant text-5xl md:text-7xl text-[#1C2321] leading-tight flex flex-col items-center">
+            <span className="font-bold tracking-wide mb-2 uppercase text-4xl md:text-6xl">Generación</span>
+            <span className="italic text-[#8B6508] font-medium text-3xl md:text-5xl">Maestra Ángela Córdova Villegas</span>
           </h1>
         </section>
 
@@ -131,7 +147,7 @@ export default function GraduacionPage() {
           </p>
         </section>
 
-        {/* 3. LOCACIÓN Y CUENTA REGRESIVA TIPO CÁPSULA OSCURA */}
+        {/* 3. LOCACIÓN Y CUENTA REGRESIVA */}
         <section className="relative z-10 py-20 px-4 md:px-12">
           <div className="max-w-6xl mx-auto bg-[#191D1C] rounded-[40px] p-8 md:p-16 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12 relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 pointer-events-none mix-blend-overlay" />
@@ -163,7 +179,7 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. MENCIONES ESPECIALES */}
+        {/* 4. MENCIONES ESPECIALES (UTF-8 Corregido) */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
           <div className="max-w-5xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
@@ -177,6 +193,27 @@ export default function GraduacionPage() {
               <div className="flex flex-col items-center md:col-start-2 bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500">
                   <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">Pta. Sociedad de Alumnos</span>
                   <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(EVENT_DATA.president)}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* MÓDULO INYECTADO: CARTA DE DESPEDIDA (EL PASO MÁS ALLÁ) */}
+        <section className="relative z-10 py-24 px-6 bg-white border-t border-[#8B6508]/10 overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#D4AF37]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+          
+          <div className="max-w-4xl mx-auto relative">
+            <div className="bg-[#FDFBF7] p-10 md:p-16 rounded-bl-[80px] rounded-tr-[80px] shadow-2xl border border-[#D4AF37]/20 relative">
+              <LucideIcons.Feather size={32} className="text-[#D4AF37] mb-8 opacity-80" />
+              <h2 className="font-montserrat text-xs uppercase tracking-[0.5em] text-[#8B6508] mb-8 font-bold">Un Mensaje para el Futuro</h2>
+              
+              <p className="font-cormorant text-2xl md:text-4xl text-[#1C2321] leading-relaxed italic mb-12">
+                "Hoy no solo terminamos un ciclo, cerramos una etapa llena de aprendizajes, juegos y amistad. El mundo que les espera es inmenso, y estamos seguros de que llevarán el nombre de esta escuela, y de esta generación, a lo más alto. Abran sus alas y vuelen lejos."
+              </p>
+
+              <div className="flex flex-col items-end border-t border-[#D4AF37]/20 pt-8 mt-8">
+                <p className="font-cormorant text-4xl text-[#1C2321] mb-2 font-semibold italic">Mtra. Ángela Córdova Villegas</p>
+                <p className="font-montserrat text-[9px] uppercase tracking-[0.3em] text-[#8B6508]">Madrina de Generación</p>
               </div>
             </div>
           </div>
@@ -202,7 +239,7 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 6. LEGADO ACADÉMICO */}
+        {/* 6. NUESTRO LEGADO (Renombrado Manualmente) */}
         <section className="relative z-10 py-32 border-t border-[#8B6508]/10 bg-[#FDFBF7]">
           <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Nuestro Legado</h2>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto mb-24 rounded-full" />

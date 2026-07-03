@@ -9,9 +9,15 @@ export const EVENT_DATA = {
 };
 
 export const MENCIONES_ESPECIALES = [
-  { rol: "Secretaria de Educación", nombre: "Beatriz Cota Ponce" },
+  { rol: "Secretaria de Educación y Cultura", nombre: "Beatriz Cota Ponce" },
+  { rol: "Secretario SNTE 54", nombre: "Mtro. Jesús Javier Ceballos Corral" },
+  { rol: "Directora Primarias Estatales", nombre: "Mtra. Lizbeth Anahi Salazar Razo" },
+  { rol: "Supervisora Zona Escolar XXII", nombre: "Mtra. Rosa Amelia Peralta Mendoza" },
+  { rol: "Directora del Plantel", nombre: "Mtra. Ángela Córdova Villegas" },
+  { rol: "Director USAER", nombre: "Mtro. Eduardo Quiñonez Higuera" },
   { rol: "Maestro 6-A", nombre: "Juan Ángel Trejo Bujanda" },
   { rol: "Maestra 6-B", nombre: "Martha Celia Solis Hermosillo" },
+  { rol: "Pta. Sociedad de Alumnos", nombre: "Karol Guadalupe Sandoval Rochim" }
 ];
 
 // Reemplaza solo la constante ITINERARIO en tu data.ts

@@ -6,12 +6,12 @@ import UnboxingGraduacion from "../../components/UnboxingGraduacion";
 import CalendarButton from "../../components/CalendarButton";
 import FloatingElements from "../../components/FloatingElements";
 import GoldDust from "../../components/GoldDust";
+import CustomCursor from "../../components/CustomCursor"; // <-- Cursor inyectado
 import { EVENT_DATA, MENCIONES_ESPECIALES, ITINERARIO, ALUMNOS_6A, ALUMNOS_6B } from "./data";
 import * as LucideIcons from "lucide-react";
 
 const noisePattern = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
 
-// ALGORITMO CORREGIDO: Soporte absoluto para caracteres UTF-8 (Acentos)
 const formatTitleCase = (str: string) => {
   return str.toLowerCase().split(' ').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
@@ -59,6 +59,7 @@ export default function GraduacionPage() {
 
   return (
     <>
+      <CustomCursor />
       <audio ref={audioRef} src="/cancion-graduacion.mp3" loop />
       
       <UnboxingGraduacion 
@@ -112,8 +113,8 @@ export default function GraduacionPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. HERO - RESTAURACIÓN DEL LOGO ESCUELA */}
-        <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
+        {/* 1. HERO */}
+        <section className="relative min-h-[100vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
           <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-8 font-semibold">
             Generación 2020 - 2026
           </p>
@@ -179,25 +180,23 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. MENCIONES ESPECIALES (UTF-8 Corregido) */}
+        {/* 4. MENCIONES ESPECIALES (Mapeo Simplificado y Completo) */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
-          <div className="max-w-5xl mx-auto text-center">
+          <div className="max-w-6xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
+            {/* Grid dinámico que se ajusta a los 9 elementos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
               {MENCIONES_ESPECIALES.map((mencion, idx) => (
                 <div key={idx} className="flex flex-col items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500">
-                  <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">{mencion.rol}</span>
-                  <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(mencion.nombre)}</span>
+                  <span className="font-montserrat text-[10px] md:text-xs uppercase tracking-[0.3em] text-[#8B6508] mb-6 font-bold">{mencion.rol}</span>
+                  <span className="font-cormorant text-2xl md:text-3xl text-[#1C2321] font-medium">{formatTitleCase(mencion.nombre)}</span>
                 </div>
               ))}
-              <div className="flex flex-col items-center md:col-start-2 bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500">
-                  <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">Pta. Sociedad de Alumnos</span>
-                  <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(EVENT_DATA.president)}</span>
-              </div>
             </div>
           </div>
         </section>
-        {/* MÓDULO INYECTADO: CARTA DE DESPEDIDA (EL PASO MÁS ALLÁ) */}
+
+        {/* CARTA DE DESPEDIDA INYECTADA */}
         <section className="relative z-10 py-24 px-6 bg-white border-t border-[#8B6508]/10 overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#D4AF37]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
@@ -239,14 +238,15 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 6. NUESTRO LEGADO (Renombrado Manualmente) */}
+        {/* 6. NUESTRO LEGADO */}
         <section className="relative z-10 py-32 border-t border-[#8B6508]/10 bg-[#FDFBF7]">
           <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Nuestro Legado</h2>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto mb-24 rounded-full" />
           
           <div className="w-full mb-32">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-              <h3 className="font-cormorant text-6xl italic text-[#1C2321] mb-4">Grupo 6-A</h3>
+              {/* CAMBIO SOLICITADO: Lista de alumnos Sexto A */}
+              <h3 className="font-cormorant text-5xl md:text-6xl italic text-[#1C2321] mb-4">Lista de alumnos Sexto A</h3>
               <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#8B6508] font-bold">{ALUMNOS_6A.length} Alumnos</span>
             </div>
             
@@ -257,7 +257,7 @@ export default function GraduacionPage() {
                   <div 
                     key={`6a-${num}`} 
                     onClick={() => setZoomedImg(src)}
-                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(139,101,8,0.2)] cursor-zoom-in relative group"
+                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(139,101,8,0.2)] cursor-zoom-in relative group" 
                     style={{ backgroundImage: `url('${src}')` }} 
                   >
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">
@@ -282,7 +282,8 @@ export default function GraduacionPage() {
 
           <div className="w-full pb-20">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-              <h3 className="font-cormorant text-6xl italic text-[#1C2321] mb-4">Grupo 6-B</h3>
+              {/* CAMBIO SOLICITADO: Lista de alumnos Sexto B */}
+              <h3 className="font-cormorant text-5xl md:text-6xl italic text-[#1C2321] mb-4">Lista de alumnos Sexto B</h3>
               <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#8B6508] font-bold">{ALUMNOS_6B.length} Alumnos</span>
             </div>
             
@@ -293,7 +294,7 @@ export default function GraduacionPage() {
                   <div 
                     key={`6b-${num}`} 
                     onClick={() => setZoomedImg(src)}
-                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(139,101,8,0.2)] cursor-zoom-in relative group"
+                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(139,101,8,0.2)] cursor-zoom-in relative group" 
                     style={{ backgroundImage: `url('${src}')` }} 
                   >
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">

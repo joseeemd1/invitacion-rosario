@@ -89,7 +89,6 @@ export default function GraduacionPage() {
         
         <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0 mix-blend-multiply" style={{ backgroundImage: noisePattern }} />
         
-        {/* INYECCIÓN DE SISTEMAS FLOTANTES Y POLVO DE ORO */}
         {hasOpened && (
           <>
             <FloatingElements />
@@ -110,77 +109,72 @@ export default function GraduacionPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. HERO */}
-        <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
+        {/* 1. HERO REESTRUCTURADO */}
+        <section className="relative min-h-[100vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
           <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-10 font-semibold">
             Generación 2020 - 2026
           </p>
           
-          <div className="relative w-[320px] md:w-[450px] aspect-square mb-12">
-            <img 
-              src="/logo-escuela.png" 
-              alt="Logo Escuela" 
-              className="absolute inset-0 w-full h-full object-contain drop-shadow-2xl"
-            />
-          </div>
-
           <div className="w-px h-20 bg-[#8B6508]/40 mb-10" />
           
-          <h1 className="font-cormorant text-5xl md:text-7xl text-[#1C2321] font-medium leading-tight">
-            Generación Maestra<br/>
-            <span className="italic text-[#8B6508]">Ángela Córdova Villegas</span>
+          <h1 className="font-cormorant text-6xl md:text-8xl text-[#1C2321] leading-tight flex flex-col items-center">
+            <span className="font-bold tracking-wide mb-2 uppercase text-5xl md:text-7xl">Generación</span>
+            <span className="italic text-[#8B6508] font-medium text-4xl md:text-6xl">Maestra Ángela Córdova Villegas</span>
           </h1>
         </section>
 
-        {/* 2. LOCACIÓN Y CUENTA REGRESIVA */}
-        <section className="relative z-10 py-32 px-4 md:px-12">
-          <div className="max-w-7xl mx-auto relative rounded-[40px] overflow-hidden shadow-2xl border border-white/20 bg-[#1C2321]">
-            <div className="absolute inset-0 opacity-40 bg-[url('/6a-foto1.jpg')] bg-cover bg-center grayscale mix-blend-overlay" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#1C2321]/80 to-[#1C2321]/95 backdrop-blur-md" />
-            
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 p-10 md:p-20">
-              <div className="flex flex-col justify-center gap-12 lg:border-r border-white/10 lg:pr-16">
-                <div>
-                  <p className="font-montserrat text-xs tracking-[0.5em] uppercase text-[#D4AF37] mb-4">Ubicación</p>
-                  <p className="font-cormorant text-4xl leading-tight mb-8 text-white">{EVENT_DATA.location}</p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <a href={EVENT_DATA.mapUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#D4AF37] text-[#1C2321] font-bold text-[10px] tracking-[0.2em] uppercase rounded-full hover:bg-white transition-colors duration-300">
-                      <LucideIcons.MapPin size={14} /> Cómo llegar
-                    </a>
-                    <CalendarButton eventData={EVENT_DATA} />
-                  </div>
-                </div>
-              </div>
+        {/* 2. CARTA DE INVITACIÓN FORMAL */}
+        <section className="relative z-10 py-20 px-6 max-w-4xl mx-auto text-center">
+          <LucideIcons.Quote size={40} className="mx-auto text-[#D4AF37] mb-8 opacity-50" />
+          <p className="font-cormorant text-3xl md:text-5xl leading-relaxed text-[#1C2321]">
+            Tenemos el honor de convocarle a la culminación de nuestro ciclo académico. Acompáñenos a celebrar nuestro último pase de lista y el inicio de un nuevo legado.
+          </p>
+        </section>
 
-              <div className="flex items-center justify-center">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-                  {[
-                    { l: 'Días', v: timeLeft.days }, { l: 'Hrs', v: timeLeft.hours },
-                    { l: 'Min', v: timeLeft.minutes }, { l: 'Seg', v: timeLeft.seconds }
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center justify-center py-10 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-inner">
-                      <span className="font-cormorant text-5xl md:text-6xl text-white font-medium drop-shadow-md">{item.v.toString().padStart(2, '0')}</span>
-                      <span className="font-montserrat text-[10px] tracking-[0.3em] uppercase text-[#D4AF37] mt-4 font-bold">{item.l}</span>
-                    </div>
-                  ))}
-                </div>
+        {/* 3. LOCACIÓN Y CUENTA REGRESIVA TIPO CÁPSULA OSCURA */}
+        <section className="relative z-10 py-20 px-4 md:px-12">
+          <div className="max-w-6xl mx-auto bg-[#191D1C] rounded-[40px] p-8 md:p-16 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 pointer-events-none mix-blend-overlay" />
+            
+            <div className="flex-1 text-center lg:text-left z-10">
+              <p className="font-montserrat text-[10px] tracking-[0.4em] uppercase text-[#D4AF37] mb-4 font-bold">Ubicación & Fecha</p>
+              <p className="font-cormorant text-4xl md:text-5xl text-white mb-2">{EVENT_DATA.location}</p>
+              <p className="font-cormorant text-2xl text-white/70 mb-8 italic">15 de Julio • 5:30 PM</p>
+              
+              <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                <a href={EVENT_DATA.mapUrl} target="_blank" rel="noreferrer" className="px-8 py-4 bg-[#D4AF37] text-[#191D1C] text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:bg-white transition-colors duration-300 flex items-center gap-2">
+                  <LucideIcons.MapPin size={14} /> Cómo Llegar
+                </a>
+                <CalendarButton eventData={EVENT_DATA} />
               </div>
+            </div>
+
+            <div className="flex gap-3 md:gap-4 z-10">
+              {[
+                { l: 'Días', v: timeLeft.days }, { l: 'Hrs', v: timeLeft.hours },
+                { l: 'Min', v: timeLeft.minutes }, { l: 'Seg', v: timeLeft.seconds }
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col items-center justify-center w-20 h-28 md:w-28 md:h-36 bg-white/5 border border-white/10 rounded-2xl shadow-inner backdrop-blur-md">
+                  <span className="font-montserrat text-3xl md:text-5xl text-white font-light">{item.v.toString().padStart(2, '0')}</span>
+                  <span className="font-montserrat text-[8px] md:text-[10px] tracking-[0.2em] uppercase text-[#D4AF37] mt-3 font-bold">{item.l}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* 3. MENCIONES ESPECIALES */}
+        {/* 4. MENCIONES ESPECIALES */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
           <div className="max-w-5xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
               {MENCIONES_ESPECIALES.map((mencion, idx) => (
-                <div key={idx} className="flex flex-col items-center bg-white p-8 rounded-2xl shadow-lg border border-[#8B6508]/10 hover:shadow-xl transition-shadow">
+                <div key={idx} className="flex flex-col items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500">
                   <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">{mencion.rol}</span>
                   <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(mencion.nombre)}</span>
                 </div>
               ))}
-              <div className="flex flex-col items-center md:col-start-2 bg-white p-8 rounded-2xl shadow-lg border border-[#8B6508]/10 hover:shadow-xl transition-shadow">
+              <div className="flex flex-col items-center md:col-start-2 bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500">
                   <span className="font-montserrat text-xs uppercase tracking-[0.4em] text-[#8B6508] mb-6 font-bold">Pta. Sociedad de Alumnos</span>
                   <span className="font-cormorant text-3xl text-[#1C2321] font-medium">{formatTitleCase(EVENT_DATA.president)}</span>
               </div>
@@ -188,19 +182,19 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. ITINERARIO */}
-        <section className="relative z-10 py-32 px-6 border-t border-[#8B6508]/20 bg-white">
+        {/* 5. ITINERARIO */}
+        <section className="relative z-10 py-32 px-6 border-t border-[#8B6508]/10 bg-white">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-cormorant text-5xl md:text-7xl text-center mb-24 text-[#1C2321] font-medium">Itinerario</h2>
             <div className="space-y-12 relative before:absolute before:inset-0 before:ml-[5.5rem] md:before:ml-[7.5rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#8B6508]/30 before:to-transparent">
               {ITINERARIO.map((item: any, idx: number) => (
                 <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white border-2 border-[#8B6508] shadow-lg shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 hover:scale-110 transition-transform">
+                  <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white border border-[#D4AF37] shadow-lg shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 hover:scale-110 transition-transform">
                     {renderIcon(item.icon)}
                   </div>
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] bg-white p-6 rounded-2xl border border-[#8B6508]/10 shadow-sm hover:shadow-xl transition-all duration-300">
-                    <div className="font-montserrat text-xs tracking-[0.3em] text-[#8B6508] mb-2 font-bold">{item.time}</div>
-                    <p className="font-cormorant text-2xl text-[#1C2321] font-medium">{item.event}</p>
+                  <div className="w-[calc(100%-4.5rem)] md:w-[calc(50%-3.5rem)] bg-white p-8 rounded-3xl border border-[#8B6508]/10 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-xl transition-all duration-300">
+                    <div className="font-montserrat text-xs tracking-[0.3em] text-[#D4AF37] mb-3 font-bold">{item.time}</div>
+                    <p className="font-cormorant text-3xl text-[#1C2321] font-medium">{item.event}</p>
                   </div>
                 </div>
               ))}
@@ -208,15 +202,15 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 5. GALERÍA DE HONOR (Renombrado desde "Directorio") */}
-        <section className="relative z-10 py-32 border-t border-[#8B6508]/20 bg-[#FDFBF7]">
-          <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Galería de Honor</h2>
-          <div className="w-24 h-1 bg-[#8B6508] mx-auto mb-24 rounded-full" />
+        {/* 6. LEGADO ACADÉMICO */}
+        <section className="relative z-10 py-32 border-t border-[#8B6508]/10 bg-[#FDFBF7]">
+          <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Nuestro Legado</h2>
+          <div className="w-24 h-1 bg-[#D4AF37] mx-auto mb-24 rounded-full" />
           
           <div className="w-full mb-32">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-              <h3 className="font-cormorant text-6xl italic text-[#8B6508] mb-4">Grupo 6-A</h3>
-              <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#1C2321]/50 font-bold">{ALUMNOS_6A.length} Alumnos</span>
+              <h3 className="font-cormorant text-6xl italic text-[#1C2321] mb-4">Grupo 6-A</h3>
+              <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#8B6508] font-bold">{ALUMNOS_6A.length} Alumnos</span>
             </div>
             
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
@@ -226,10 +220,10 @@ export default function GraduacionPage() {
                   <div 
                     key={`6a-${num}`} 
                     onClick={() => setZoomedImg(src)}
-                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-2xl shadow-xl snap-center shrink-0 grayscale hover:grayscale-0 transition-all duration-500 cursor-zoom-in relative group" 
+                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 grayscale hover:grayscale-0 transition-all duration-500 cursor-zoom-in relative group" 
                     style={{ backgroundImage: `url('${src}')` }} 
                   >
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">
                       <LucideIcons.ZoomIn size={48} className="text-white drop-shadow-lg" />
                     </div>
                   </div>
@@ -240,9 +234,9 @@ export default function GraduacionPage() {
             <div className="max-w-7xl mx-auto px-6 mt-8">
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
                 {ALUMNOS_6A.map((alumno, idx) => (
-                  <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between group cursor-default">
+                  <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/10 pb-3 flex justify-between group cursor-default">
                     <span>{formatTitleCase(alumno)}</span>
-                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#8B6508] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
+                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
                   </li>
                 ))}
               </ul>
@@ -251,8 +245,8 @@ export default function GraduacionPage() {
 
           <div className="w-full pb-20">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-              <h3 className="font-cormorant text-6xl italic text-[#8B6508] mb-4">Grupo 6-B</h3>
-              <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#1C2321]/50 font-bold">{ALUMNOS_6B.length} Alumnos</span>
+              <h3 className="font-cormorant text-6xl italic text-[#1C2321] mb-4">Grupo 6-B</h3>
+              <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#8B6508] font-bold">{ALUMNOS_6B.length} Alumnos</span>
             </div>
             
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
@@ -262,10 +256,10 @@ export default function GraduacionPage() {
                   <div 
                     key={`6b-${num}`} 
                     onClick={() => setZoomedImg(src)}
-                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-2xl shadow-xl snap-center shrink-0 grayscale hover:grayscale-0 transition-all duration-500 cursor-zoom-in relative group" 
+                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 grayscale hover:grayscale-0 transition-all duration-500 cursor-zoom-in relative group" 
                     style={{ backgroundImage: `url('${src}')` }} 
                   >
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">
                       <LucideIcons.ZoomIn size={48} className="text-white drop-shadow-lg" />
                     </div>
                   </div>
@@ -276,16 +270,15 @@ export default function GraduacionPage() {
             <div className="max-w-7xl mx-auto px-6 mt-8">
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
                 {ALUMNOS_6B.map((alumno, idx) => (
-                  <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between group cursor-default">
+                  <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/10 pb-3 flex justify-between group cursor-default">
                     <span>{formatTitleCase(alumno)}</span>
-                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#8B6508] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
+                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
         </section>
-
       </main>
     </>
   );

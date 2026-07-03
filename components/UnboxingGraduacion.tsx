@@ -7,7 +7,7 @@ const noisePattern = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns
 export default function UnboxingGraduacion({ 
   onOpen, 
   audioRef,
-  setGlobalPlay // Recibimos el control de estado desde el padre
+  setGlobalPlay
 }: { 
   onOpen: () => void; 
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
@@ -16,15 +16,14 @@ export default function UnboxingGraduacion({
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpen = () => {
-    if (isOpened) return; // Evitar dobles clics
+    if (isOpened) return;
     setIsOpened(true);
     
-    // Inyección de Audio Grado Producción
     if (audioRef.current) {
       audioRef.current.volume = 0.5;
       audioRef.current.play()
         .then(() => setGlobalPlay(true))
-        .catch((e) => console.log("Autoplay bloqueado (requiere tap adicional):", e));
+        .catch((e) => console.log("Autoplay bloqueado:", e));
     }
     
     setTimeout(() => {
@@ -40,7 +39,7 @@ export default function UnboxingGraduacion({
           exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
           transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FDFBF7] px-4 overflow-hidden cursor-pointer"
-          onClick={handleOpen} // El clic ahora abarca toda la pantalla
+          onClick={handleOpen}
         >
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply" style={{ backgroundImage: noisePattern }} />
 
@@ -50,10 +49,12 @@ export default function UnboxingGraduacion({
             transition={{ duration: 1.2, delay: 0.3 }}
             className="text-center mb-12 z-10 flex flex-col items-center w-full"
           >
-            <p className="font-montserrat text-sm md:text-base uppercase tracking-[0.6em] text-[#1C2321]/70 mb-8 font-semibold">
+            {/* ESCALA INCREMENTADA: text-base md:text-lg */}
+            <p className="font-montserrat text-base md:text-lg uppercase tracking-[0.6em] text-[#1C2321]/70 mb-8 font-semibold">
               Invitación Oficial
             </p>
-            <p className="font-cormorant text-5xl md:text-7xl italic text-[#1C2321] leading-tight font-medium">
+            {/* ESCALA INCREMENTADA: text-6xl md:text-8xl */}
+            <p className="font-cormorant text-6xl md:text-8xl italic text-[#1C2321] leading-tight font-medium">
               Ceremonia de<br/>Graduación
             </p>
           </motion.div>
@@ -65,10 +66,11 @@ export default function UnboxingGraduacion({
             transition={{ y: { repeat: Infinity, duration: 4, ease: "easeInOut" } }}
             className="group relative flex h-64 w-64 md:h-80 md:w-80 items-center justify-center rounded-full shadow-[0_20px_50px_rgba(139,101,8,0.15)] border border-[#D4AF37]/40 overflow-hidden bg-white z-20"
           >
+            {/* CORRECCIÓN VISUAL: Eliminado el p-4, cambiado a sello-graduacion.png y object-cover */}
             <img 
-              src="/logo-escuela.png" 
+              src="/sello-graduacion.png" 
               alt="Sello" 
-              className="absolute inset-0 h-full w-full object-contain p-4 z-10 opacity-95 transition-transform duration-1000 group-hover:scale-110" 
+              className="absolute inset-0 h-full w-full object-cover z-10 transition-transform duration-1000 group-hover:scale-110" 
             />
           </motion.div>
 
@@ -78,7 +80,8 @@ export default function UnboxingGraduacion({
             transition={{ delay: 1 }}
             className="mt-16 flex flex-col items-center gap-4 z-10"
           >
-            <p className="font-montserrat text-xs md:text-sm uppercase tracking-[0.5em] text-[#8B6508] font-bold">
+            {/* ESCALA INCREMENTADA */}
+            <p className="font-montserrat text-sm md:text-base uppercase tracking-[0.5em] text-[#8B6508] font-bold">
               Toque la pantalla para abrir
             </p>
             <span className="h-16 w-[2px] bg-gradient-to-b from-[#8B6508] to-transparent opacity-60" />

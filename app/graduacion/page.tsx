@@ -137,9 +137,15 @@ export default function GraduacionPage() {
         {/* 2. CARTA DE INVITACIÓN FORMAL */}
         <section className="relative z-10 py-20 px-6 max-w-4xl mx-auto text-center">
           <LucideIcons.Quote size={40} className="mx-auto text-[#D4AF37] mb-8 opacity-50" />
-          <p className="font-cormorant text-3xl md:text-5xl leading-relaxed text-[#1C2321]">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1 }}
+            className="font-cormorant text-3xl md:text-5xl leading-relaxed text-[#1C2321]"
+          >
             Tenemos el honor de convocarle a la culminación de nuestro ciclo académico. Acompáñenos a celebrar nuestro último pase de lista y el inicio de un nuevo legado.
-          </p>
+          </motion.p>
         </section>
 
         {/* 3. LOCACIÓN Y CUENTA REGRESIVA */}
@@ -176,24 +182,29 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. MENCIONES ESPECIALES */}
+        {/* 4. MENCIONES ESPECIALES (Ortografía Pura Restaurada) */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
             
             <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {MENCIONES_ESPECIALES.map((mencion, idx) => (
-                <div 
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.6, delay: idx * 0.1 }}
                   key={idx} 
                   className="flex flex-col items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500 w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-3rem)] max-w-sm"
                 >
                   <span className="font-montserrat text-[10px] md:text-xs uppercase tracking-[0.3em] text-[#8B6508] mb-6 font-bold text-center">
                     {mencion.rol}
                   </span>
-                  <span className="font-cormorant text-2xl md:text-3xl text-[#1C2321] font-medium text-center">
+                  {/* TEXTO RESTAURADO: Sin uppercase, tipografía Cormorant pura */}
+                  <span className="font-cormorant text-2xl md:text-3xl text-[#1C2321] font-medium text-center leading-tight">
                     {mencion.nombre}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -204,7 +215,13 @@ export default function GraduacionPage() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#D4AF37]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
           
-          <div className="max-w-4xl mx-auto relative">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto relative"
+          >
             <div className="bg-[#FDFBF7] p-10 md:p-16 rounded-bl-[80px] rounded-tr-[80px] shadow-2xl border border-[#D4AF37]/20 relative">
               <LucideIcons.Feather size={32} className="text-[#D4AF37] mb-8 opacity-80" />
               <h2 className="font-montserrat text-xs uppercase tracking-[0.5em] text-[#8B6508] mb-8 font-bold">Un Mensaje para el Futuro</h2>
@@ -218,7 +235,7 @@ export default function GraduacionPage() {
                 <p className="font-montserrat text-[9px] uppercase tracking-[0.3em] text-[#8B6508]">Madrina de Generación</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </section>
 
         {/* 5. ITINERARIO */}
@@ -227,7 +244,14 @@ export default function GraduacionPage() {
             <h2 className="font-cormorant text-5xl md:text-7xl text-center mb-24 text-[#1C2321] font-medium">Itinerario</h2>
             <div className="space-y-12 relative before:absolute before:inset-0 before:ml-[5.5rem] md:before:ml-[7.5rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#8B6508]/30 before:to-transparent">
               {ITINERARIO.map((item: any, idx: number) => (
-                <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                <motion.div 
+                  initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5 }}
+                  key={idx} 
+                  className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
+                >
                   <div className="flex items-center justify-center w-14 h-14 rounded-full bg-white border border-[#D4AF37] shadow-lg shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 hover:scale-110 transition-transform">
                     {renderIcon(item.icon)}
                   </div>
@@ -235,13 +259,13 @@ export default function GraduacionPage() {
                     <div className="font-montserrat text-xs tracking-[0.3em] text-[#D4AF37] mb-3 font-bold">{item.time}</div>
                     <p className="font-cormorant text-3xl text-[#1C2321] font-medium">{item.event}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* 6. NUESTRO LEGADO */}
+        {/* 6. NUESTRO LEGADO (Truncate Purgado + Animación) */}
         <section className="relative z-10 py-32 border-t border-[#8B6508]/10 bg-[#FDFBF7]">
           <h2 className="font-cormorant text-6xl md:text-8xl text-center mb-8 text-[#1C2321] font-medium">Nuestro Legado</h2>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto mb-24 rounded-full" />
@@ -270,14 +294,21 @@ export default function GraduacionPage() {
               })}
             </div>
 
-            {/* APLICACIÓN DE INGENIERÍA TIPOGRÁFICA EN LISTA 6-A */}
+            {/* LISTA 6-A FLUIDA */}
             <div className="max-w-7xl mx-auto px-6 mt-8">
-              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
                 {ALUMNOS_6A.map((alumno, idx) => (
-                  <li key={idx} className="font-montserrat text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between items-center group cursor-default">
-                    <span className="truncate pr-4">{alumno}</span>
-                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors shrink-0">{(idx + 1).toString().padStart(2, '0')}</span>
-                  </li>
+                  <motion.li 
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.4, delay: (idx % 10) * 0.05 }} // Delay modular para no sobrecargar el renderizador
+                    key={idx} 
+                    className="font-montserrat text-[11px] md:text-xs lg:text-sm font-semibold uppercase tracking-[0.15em] text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between items-end group cursor-default gap-4"
+                  >
+                    <span className="leading-snug max-w-[90%]">{alumno}</span>
+                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors shrink-0 mb-0.5">{(idx + 1).toString().padStart(2, '0')}</span>
+                  </motion.li>
                 ))}
               </ul>
             </div>
@@ -307,14 +338,21 @@ export default function GraduacionPage() {
               })}
             </div>
 
-            {/* APLICACIÓN DE INGENIERÍA TIPOGRÁFICA EN LISTA 6-B */}
+            {/* LISTA 6-B FLUIDA */}
             <div className="max-w-7xl mx-auto px-6 mt-8">
-              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
                 {ALUMNOS_6B.map((alumno, idx) => (
-                  <li key={idx} className="font-montserrat text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between items-center group cursor-default">
-                    <span className="truncate pr-4">{alumno}</span>
-                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors shrink-0">{(idx + 1).toString().padStart(2, '0')}</span>
-                  </li>
+                  <motion.li 
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.4, delay: (idx % 10) * 0.05 }}
+                    key={idx} 
+                    className="font-montserrat text-[11px] md:text-xs lg:text-sm font-semibold uppercase tracking-[0.15em] text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between items-end group cursor-default gap-4"
+                  >
+                    <span className="leading-snug max-w-[90%]">{alumno}</span>
+                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors shrink-0 mb-0.5">{(idx + 1).toString().padStart(2, '0')}</span>
+                  </motion.li>
                 ))}
               </ul>
             </div>

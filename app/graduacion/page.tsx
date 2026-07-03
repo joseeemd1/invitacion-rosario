@@ -257,7 +257,7 @@ export default function GraduacionPage() {
                   <div 
                     key={`6a-${num}`} 
                     onClick={() => setZoomedImg(src)}
-                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 grayscale hover:grayscale-0 transition-all duration-500 cursor-zoom-in relative group" 
+                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(139,101,8,0.2)] cursor-zoom-in relative group"
                     style={{ backgroundImage: `url('${src}')` }} 
                   >
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">
@@ -293,7 +293,7 @@ export default function GraduacionPage() {
                   <div 
                     key={`6b-${num}`} 
                     onClick={() => setZoomedImg(src)}
-                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 grayscale hover:grayscale-0 transition-all duration-500 cursor-zoom-in relative group" 
+                    className="min-w-[85%] md:min-w-[45%] aspect-[16/10] bg-cover bg-center rounded-3xl shadow-xl snap-center shrink-0 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(139,101,8,0.2)] cursor-zoom-in relative group"
                     style={{ backgroundImage: `url('${src}')` }} 
                   >
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center">

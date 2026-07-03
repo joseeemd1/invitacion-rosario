@@ -13,8 +13,8 @@ export default function FloatingElements() {
   ];
 
   return (
-    // Opacidad incrementada al 40%
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
+    // CAMBIO CRÍTICO: Elevación a z-[40] absoluta
+    <div className="fixed inset-0 pointer-events-none z-[40] overflow-hidden opacity-40">
       {elements.map((el, idx) => (
         <motion.div
           key={idx}

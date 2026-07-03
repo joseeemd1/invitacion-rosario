@@ -6,7 +6,6 @@ export default function GoldDust() {
   const [particles, setParticles] = useState<any[]>([]);
 
   useEffect(() => {
-    // Generación matemática de 40 partículas en posiciones pseudoaleatorias
     const p = Array.from({ length: 40 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
@@ -19,7 +18,8 @@ export default function GoldDust() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-screen">
+    // CAMBIO CRÍTICO: Elevación a z-[40] absoluta
+    <div className="fixed inset-0 pointer-events-none z-[40] overflow-hidden">
       {particles.map((p) => (
         <motion.div
           key={p.id}
@@ -32,7 +32,7 @@ export default function GoldDust() {
           }}
           animate={{
             y: [0, -50, 0],
-            opacity: [0, 0.6, 0],
+            opacity: [0, 0.7, 0],
             scale: [0, 1.5, 0],
           }}
           transition={{

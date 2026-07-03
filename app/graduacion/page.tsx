@@ -180,16 +180,24 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. MENCIONES ESPECIALES (Mapeo Simplificado y Completo) */}
+        {/* 4. MENCIONES ESPECIALES (Simetría Líquida Inyectada) */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
-          <div className="max-w-6xl mx-auto text-center">
+          <div className="max-w-7xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
-            {/* Grid dinámico que se ajusta a los 9 elementos */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            
+            {/* Arquitectura Flexbox para centrado automático de elementos huérfanos */}
+            <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {MENCIONES_ESPECIALES.map((mencion, idx) => (
-                <div key={idx} className="flex flex-col items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500">
-                  <span className="font-montserrat text-[10px] md:text-xs uppercase tracking-[0.3em] text-[#8B6508] mb-6 font-bold">{mencion.rol}</span>
-                  <span className="font-cormorant text-2xl md:text-3xl text-[#1C2321] font-medium">{formatTitleCase(mencion.nombre)}</span>
+                <div 
+                  key={idx} 
+                  className="flex flex-col items-center bg-white p-8 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-[#8B6508]/10 hover:-translate-y-2 transition-transform duration-500 w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-3rem)] max-w-sm"
+                >
+                  <span className="font-montserrat text-[10px] md:text-xs uppercase tracking-[0.3em] text-[#8B6508] mb-6 font-bold text-center">
+                    {mencion.rol}
+                  </span>
+                  <span className="font-cormorant text-2xl md:text-3xl text-[#1C2321] font-medium text-center">
+                    {formatTitleCase(mencion.nombre)}
+                  </span>
                 </div>
               ))}
             </div>

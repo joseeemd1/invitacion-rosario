@@ -107,7 +107,7 @@ export default function GraduacionPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. HERO */}
+        {/* 1. HERO - CONTROL TIPOGRÁFICO ABSOLUTO */}
         <section className="relative min-h-[100vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
           <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-8 font-semibold">
             Generación 2020 - 2026
@@ -128,9 +128,14 @@ export default function GraduacionPage() {
           
           <div className="w-px h-16 bg-[#8B6508]/40 mb-8" />
           
-          <h1 className="font-cormorant text-5xl md:text-7xl text-[#1C2321] leading-tight flex flex-col items-center">
+          <h1 className="font-cormorant text-[#1C2321] leading-tight flex flex-col items-center">
             <span className="font-bold tracking-wide mb-2 uppercase text-4xl md:text-6xl">Generación</span>
-            <span className="italic text-[#8B6508] font-medium text-3xl md:text-5xl">Maestra Ángela Córdova Villegas</span>
+            <span className="italic text-[#8B6508] font-medium text-3xl md:text-5xl mt-2">
+              {/* Control de quiebre responsivo inyectado */}
+              <span className="block md:inline">Maestra</span>
+              <span className="hidden md:inline"> </span>
+              <span className="block md:inline">Ángela Córdova Villegas</span>
+            </span>
           </h1>
         </section>
 

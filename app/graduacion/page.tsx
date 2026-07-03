@@ -6,17 +6,11 @@ import UnboxingGraduacion from "../../components/UnboxingGraduacion";
 import CalendarButton from "../../components/CalendarButton";
 import FloatingElements from "../../components/FloatingElements";
 import GoldDust from "../../components/GoldDust";
-import CustomCursor from "../../components/CustomCursor"; // <-- Cursor inyectado
+import CustomCursor from "../../components/CustomCursor";
 import { EVENT_DATA, MENCIONES_ESPECIALES, ITINERARIO, ALUMNOS_6A, ALUMNOS_6B } from "./data";
 import * as LucideIcons from "lucide-react";
 
 const noisePattern = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
-
-const formatTitleCase = (str: string) => {
-  return str.toLowerCase().split(' ').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
-};
 
 export default function GraduacionPage() {
   const [hasOpened, setHasOpened] = useState(false);
@@ -113,7 +107,7 @@ export default function GraduacionPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. HERO - ESCALA DEL LOGO MAXIMIZADA */}
+        {/* 1. HERO */}
         <section className="relative min-h-[100vh] flex flex-col items-center justify-center text-center px-4 pt-10 z-10">
           <p className="font-montserrat text-sm md:text-base tracking-[0.6em] uppercase text-[#1C2321]/50 mb-8 font-semibold">
             Generación 2020 - 2026
@@ -148,7 +142,7 @@ export default function GraduacionPage() {
           </p>
         </section>
 
-        {/* 3. LOCACIÓN Y CUENTA REGRESIVA - RESPONSIVIDAD LÍQUIDA */}
+        {/* 3. LOCACIÓN Y CUENTA REGRESIVA */}
         <section className="relative z-10 py-20 px-4 md:px-12">
           <div className="max-w-6xl mx-auto bg-[#191D1C] rounded-[40px] p-6 sm:p-10 md:p-16 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 pointer-events-none mix-blend-overlay" />
@@ -156,7 +150,7 @@ export default function GraduacionPage() {
             <div className="flex-1 text-center lg:text-left z-10 w-full">
               <p className="font-montserrat text-[10px] tracking-[0.4em] uppercase text-[#D4AF37] mb-4 font-bold">Ubicación & Fecha</p>
               <p className="font-cormorant text-4xl md:text-5xl text-white mb-2">{EVENT_DATA.location}</p>
-              <p className="font-cormorant text-2xl text-white/70 mb-8 italic">15 de Julio • 5:30 PM</p>
+              <p className="font-cormorant text-2xl text-white/70 mb-8 italic">15 de Julio • 10:00 AM</p>
               
               <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                 <a href={EVENT_DATA.mapUrl} target="_blank" rel="noreferrer" className="px-6 md:px-8 py-4 bg-[#D4AF37] text-[#191D1C] text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:bg-white transition-colors duration-300 flex items-center gap-2">
@@ -182,12 +176,11 @@ export default function GraduacionPage() {
           </div>
         </section>
 
-        {/* 4. MENCIONES ESPECIALES (Simetría Líquida Inyectada) */}
+        {/* 4. MENCIONES ESPECIALES */}
         <section className="relative z-10 py-32 px-6 bg-[#FDFBF7]">
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="font-cormorant text-5xl md:text-6xl text-center mb-20 text-[#1C2321] font-medium">Menciones Especiales</h2>
             
-            {/* Arquitectura Flexbox para centrado automático de elementos huérfanos */}
             <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {MENCIONES_ESPECIALES.map((mencion, idx) => (
                 <div 
@@ -198,7 +191,7 @@ export default function GraduacionPage() {
                     {mencion.rol}
                   </span>
                   <span className="font-cormorant text-2xl md:text-3xl text-[#1C2321] font-medium text-center">
-                    {formatTitleCase(mencion.nombre)}
+                    {mencion.nombre}
                   </span>
                 </div>
               ))}
@@ -255,7 +248,6 @@ export default function GraduacionPage() {
           
           <div className="w-full mb-32">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-              {/* CAMBIO SOLICITADO: Lista de alumnos Sexto A */}
               <h3 className="font-cormorant text-5xl md:text-6xl italic text-[#1C2321] mb-4">Lista de alumnos Sexto A</h3>
               <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#8B6508] font-bold">{ALUMNOS_6A.length} Alumnos</span>
             </div>
@@ -278,12 +270,13 @@ export default function GraduacionPage() {
               })}
             </div>
 
+            {/* APLICACIÓN DE INGENIERÍA TIPOGRÁFICA EN LISTA 6-A */}
             <div className="max-w-7xl mx-auto px-6 mt-8">
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
                 {ALUMNOS_6A.map((alumno, idx) => (
-                  <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/10 pb-3 flex justify-between group cursor-default">
-                    <span>{formatTitleCase(alumno)}</span>
-                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
+                  <li key={idx} className="font-montserrat text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between items-center group cursor-default">
+                    <span className="truncate pr-4">{alumno}</span>
+                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors shrink-0">{(idx + 1).toString().padStart(2, '0')}</span>
                   </li>
                 ))}
               </ul>
@@ -292,7 +285,6 @@ export default function GraduacionPage() {
 
           <div className="w-full pb-20">
             <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-              {/* CAMBIO SOLICITADO: Lista de alumnos Sexto B */}
               <h3 className="font-cormorant text-5xl md:text-6xl italic text-[#1C2321] mb-4">Lista de alumnos Sexto B</h3>
               <span className="font-montserrat text-xs tracking-[0.4em] uppercase text-[#8B6508] font-bold">{ALUMNOS_6B.length} Alumnos</span>
             </div>
@@ -315,12 +307,13 @@ export default function GraduacionPage() {
               })}
             </div>
 
+            {/* APLICACIÓN DE INGENIERÍA TIPOGRÁFICA EN LISTA 6-B */}
             <div className="max-w-7xl mx-auto px-6 mt-8">
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-6">
                 {ALUMNOS_6B.map((alumno, idx) => (
-                  <li key={idx} className="font-cormorant text-2xl text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/10 pb-3 flex justify-between group cursor-default">
-                    <span>{formatTitleCase(alumno)}</span>
-                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors pt-2">{(idx + 1).toString().padStart(2, '0')}</span>
+                  <li key={idx} className="font-montserrat text-sm md:text-base font-semibold uppercase tracking-[0.15em] text-[#1C2321] hover:text-[#8B6508] transition-colors border-b border-[#8B6508]/20 pb-3 flex justify-between items-center group cursor-default">
+                    <span className="truncate pr-4">{alumno}</span>
+                    <span className="font-montserrat text-[10px] font-bold text-[#1C2321]/30 group-hover:text-[#D4AF37] transition-colors shrink-0">{(idx + 1).toString().padStart(2, '0')}</span>
                   </li>
                 ))}
               </ul>
